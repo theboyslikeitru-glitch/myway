@@ -1,0 +1,3075 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мой путь · HRT</title>
+<style>
+  :root{
+    --text:#12131a; --muted:#8b8d9a; --line:#eceef4; --soft:#fcfcfe; --card:#ffffff;
+    --pink:#ff6fa5; --pink-soft:#ffeef5; --danger:#ff3b30; --green:#12a150;
+    --amber:#ff9f0a; --blue:#7bb8ff; --radius:22px;
+    --shadow:0 1px 2px rgba(18,19,26,.04), 0 18px 40px -22px rgba(18,19,26,.18);
+    --bg-1:#ffe9f2; --bg-2:#e7f2ff; --bg-base:#ffffff;
+    --stat-hover-border:rgba(255,111,165,.40); --stat-hover-bg:rgba(255,111,165,.05);
+  }
+  [data-theme="dark"]{
+    --text:#f0f1f5; --muted:#8b8d9a; --line:#23242e; --soft:#1a1b23; --card:#14151c;
+    --pink:#ff85b3; --pink-soft:#2a1a22; --danger:#ff5f57; --green:#34d17d;
+    --amber:#ffb340; --blue:#7bb8ff;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 18px 40px -22px rgba(0,0,0,.6);
+    --bg-1:#2a1a2e; --bg-2:#1a2238; --bg-base:#0a0b10;
+    --stat-hover-border:rgba(255,133,179,.42); --stat-hover-bg:rgba(255,133,179,.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html{ transition:background-color .5s ease; }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(900px 520px at 8% -12%, var(--bg-1) 0%, rgba(255,255,255,0) 62%),
+      radial-gradient(900px 520px at 95% -4%, var(--bg-2) 0%, rgba(231,242,255,0) 60%),
+      var(--bg-base);
+    background-attachment:fixed; min-height:100vh; padding:28px 18px 70px;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    transition:background-color .5s ease, color .35s ease;
+  }
+  .wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:18px;}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:0 4px 4px;gap:12px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:11px;}
+  .brand h1{margin:0;font-size:17px;font-weight:680;letter-spacing:-.015em;}
+  .flag{width:28px;height:18px;border-radius:5px;flex-shrink:0;
+    background:linear-gradient(180deg,#5BCEFA 0 20%,#F5A9B8 20% 40%,#ffffff 40% 60%,#F5A9B8 60% 80%,#5BCEFA 80% 100%);
+    box-shadow:inset 0 0 0 1px rgba(18,19,26,.07), 0 2px 6px rgba(91,206,250,.25);}
+  .top-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+  .ghost-btn{border:1px solid var(--line);background:var(--card);color:var(--muted);
+    font:inherit;font-size:12.5px;font-weight:560;padding:8px 14px;border-radius:99px;cursor:pointer;transition:.22s ease;}
+  .ghost-btn:hover{color:var(--danger);border-color:#ffd5d2;background:#fff7f7;}
+  [data-theme="dark"] .ghost-btn:hover{background:#2a1a1a;border-color:#4a2828;}
+  .theme-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
+    background:var(--card);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    position:relative;transition:background .3s ease, border-color .3s ease, transform .2s ease, color .3s ease;}
+  .theme-btn:hover{transform:scale(1.07);}
+  .theme-btn:active{transform:scale(.94);}
+  .theme-btn svg{width:18px;height:18px;position:absolute;
+    transition:opacity .45s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1);}
+  .theme-btn .sun{opacity:1;transform:rotate(0deg) scale(1);}
+  .theme-btn .moon{opacity:0;transform:rotate(-100deg) scale(.4);}
+  [data-theme="dark"] .theme-btn .sun{opacity:0;transform:rotate(100deg) scale(.4);}
+  [data-theme="dark"] .theme-btn .moon{opacity:1;transform:rotate(0deg) scale(1);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:24px 22px;opacity:0;transform:translateY(16px);
+    animation:rise .65s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:var(--d,0s);
+    transition:background-color .5s ease, border-color .5s ease, box-shadow .5s ease;}
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px;}
+  .card-head h2{margin:0;font-size:13px;font-weight:680;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .badge{font-size:11.5px;font-weight:560;color:var(--muted);background:var(--soft);border:1px solid var(--line);
+    padding:5px 11px;border-radius:99px;white-space:nowrap;transition:color .4s ease, background-color .5s ease, border-color .5s ease;}
+  .badge.clickable{cursor:pointer;transition:color .2s ease, border-color .2s ease, background-color .2s ease;}
+  .badge.clickable:hover{color:var(--pink);border-color:var(--pink);background:var(--pink-soft);}
+  #userEmailBadge{max-width:170px;overflow:hidden;text-overflow:ellipsis;}
+  .hero{display:flex;align-items:baseline;gap:12px;margin-bottom:22px;}
+  .hero-num{font-size:66px;font-weight:720;letter-spacing:-.045em;line-height:.95;
+    background:linear-gradient(135deg,#ff6fa5 10%,#a98bff 55%,#7bb8ff 95%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums;}
+  .hero-unit{font-size:20px;font-weight:560;color:var(--muted);letter-spacing:-.01em;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+  .stat{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:14px 12px;text-align:center;
+    transition:border-color .35s ease, background-color .35s ease, transform .25s ease;}
+  .stat:hover{border-color:var(--stat-hover-border);background:var(--stat-hover-bg);transform:translateY(-2px);}
+  .stat-val{font-size:23px;font-weight:680;letter-spacing:-.03em;font-variant-numeric:tabular-nums;}
+  .stat-lbl{font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .stat-sub{font-size:10.5px;color:var(--muted);opacity:.7;margin-top:2px;}
+  .ms-head{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted);margin-bottom:9px;gap:10px;}
+  .ms-head b{color:var(--text);font-weight:650;}
+  .ms-left{font-weight:600;color:var(--pink);}
+  .bar{height:8px;border-radius:99px;background:var(--soft);overflow:hidden;}
+  .bar-fill{height:100%;border-radius:99px;width:0;background:linear-gradient(90deg,#ffc0da,#ff6fa5);
+    transition:width .9s cubic-bezier(.2,.8,.3,1), background .5s ease;}
+  .bar-fill.liquid{
+    background:linear-gradient(180deg,#ffd1e3 0%,#ff85b3 45%,#ff5f9e 100%) !important;
+    box-shadow:inset 0 -3px 8px rgba(255,95,158,.35), inset 0 2px 6px rgba(255,255,255,.5);
+    position:relative;overflow:hidden;
+  }
+  .bar-fill.liquid::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.55) 50%,transparent 100%);
+    animation:liquidShine 3.2s ease-in-out infinite;
+  }
+  @keyframes liquidShine{
+    0%{transform:translateX(-100%);}
+    55%{transform:translateX(100%);}
+    100%{transform:translateX(100%);}
+  }
+  .facts-box{
+    margin-top:14px;padding:9px 13px;
+    border-radius:12px;background:var(--soft);border:1px solid var(--line);
+    display:flex;align-items:flex-start;gap:9px;
+    min-height:0;
+    transition:background-color .5s ease, border-color .5s ease;
+  }
+  .facts-icon{color:var(--pink);font-size:13px;flex-shrink:0;line-height:1.45;transition:color .5s ease;}
+  .facts-text{font-size:12.5px;line-height:1.45;color:var(--text);opacity:1;transition:opacity .5s ease;}
+  .facts-text.fade{opacity:0;}
+  .field{display:block;}
+  .field-lbl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;padding-left:2px;font-weight:520;}
+  .field-box{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:13px;
+    padding:9px 12px;background:var(--soft);transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;}
+  .field-box:focus-within{border-color:#ffc3da;box-shadow:0 0 0 4px var(--pink-soft);background:var(--card);}
+  .field-box input,.field-box select{border:0;outline:0;background:transparent;width:100%;font:inherit;font-size:15px;font-weight:620;
+    color:var(--text);padding:0;letter-spacing:-.01em;min-width:0;}
+  .field-box select{cursor:pointer;}
+  .field-box input::placeholder{color:var(--muted);opacity:.6;}
+  .field-box input::-webkit-outer-spin-button,.field-box input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .field-box input[type=number]{-moz-appearance:textfield;}
+  .field-unit{font-size:11.5px;color:var(--muted);flex-shrink:0;font-weight:520;}
+  .weight-display{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px;}
+  .weight-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--soft);color:var(--text);
+    font:inherit;font-size:22px;font-weight:400;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:.2s ease;user-select:none;}
+  .weight-btn:hover{background:var(--pink-soft);border-color:var(--pink);color:var(--pink);transform:scale(1.08);}
+  .weight-btn:active{transform:scale(.92);}
+  .weight-value{display:flex;align-items:baseline;gap:6px;min-width:170px;justify-content:center;}
+  .weight-value input{border:0;outline:0;background:transparent;font:inherit;font-size:44px;font-weight:720;letter-spacing:-.04em;
+    color:var(--weight-color, var(--text));width:100%;max-width:170px;text-align:right;font-variant-numeric:tabular-nums;
+    padding:0;transition:color .5s ease;}
+  .weight-value input::-webkit-outer-spin-button,.weight-value input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .weight-value input[type=number]{-moz-appearance:textfield;}
+  .weight-unit{font-size:17px;font-weight:560;color:var(--muted);}
+  .weight-status{text-align:center;font-size:13.5px;font-weight:640;margin-bottom:16px;transition:color .5s ease;}
+  .weight-scale-wrap{position:relative;margin-bottom:8px;}
+  .weight-scale{height:10px;border-radius:99px;position:relative;overflow:hidden;
+    background:linear-gradient(90deg,#ff3b30 0%,#ff9f0a 22%,#12a150 42%,#12a150 68%,#7bb8ff 85%,#a855f7 100%);opacity:.85;}
+  [data-theme="dark"] .weight-scale{opacity:.75;}
+  .weight-marker{position:absolute;top:-5px;width:4px;height:20px;border-radius:2px;background:var(--text);
+    transform:translateX(-50%);box-shadow:0 0 0 3px var(--card), 0 2px 6px rgba(0,0,0,.25);
+    transition:left .55s cubic-bezier(.2,.8,.3,1);left:0;}
+  .weight-scale-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);font-weight:520;margin-top:9px;}
+  .med-row{padding:16px 0;border-bottom:1px solid var(--line);}
+  .med-row:first-child{padding-top:0;}
+  .med-row:last-child{border-bottom:0;padding-bottom:0;}
+  .med-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+  .med-name{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:640;letter-spacing:-.01em;min-width:0;}
+  .med-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px var(--soft);}
+  .med-sub{font-size:11px;color:var(--muted);font-weight:520;margin-left:2px;}
+  .med-days{font-size:14px;font-weight:680;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap;transition:color .5s ease;}
+  .med-right{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+  .med-add{
+    width:26px;height:26px;flex-shrink:0;padding:0;
+    border-radius:50%;border:1px solid var(--line);
+    background:var(--card);color:var(--pink);
+    font:inherit;font-size:17px;font-weight:600;line-height:1;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:.2s ease;
+  }
+  .med-add:hover{background:var(--pink-soft);border-color:var(--pink);transform:scale(1.1);}
+  .med-add:active{transform:scale(.9);}
+  .med-edit{
+    width:26px;height:26px;flex-shrink:0;padding:0;
+    border-radius:50%;border:1px solid var(--line);
+    background:var(--card);color:var(--muted);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:.2s ease;
+  }
+  .med-edit:hover{background:var(--soft);color:var(--pink);border-color:var(--pink);transform:scale(1.1);}
+  .med-edit:active{transform:scale(.9);}
+  .med-edit svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+  .med-del{width:26px;height:26px;flex-shrink:0;padding:0;border:0;background:transparent;color:var(--muted);
+    border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    opacity:.5;transition:.2s;}
+  .med-del:hover{opacity:1;color:var(--danger);background:rgba(255,59,48,.08);}
+  .med-del svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;}
+  .med-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:9px;font-weight:520;gap:8px;flex-wrap:wrap;}
+  .med-row .bar{height:10px;}
+  .med-row .bar-fill{transition:width .9s cubic-bezier(.2,.8,.3,1), background .6s ease;}
+  .stats-total{text-align:center;font-size:13px;color:var(--muted);margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+  .stats-total b{font-size:20px;font-weight:720;color:var(--text);letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
+  .stats-inner .grid3{margin-bottom:0;}
+  .collapse-toggle{border:1px solid var(--line);background:var(--soft);color:var(--muted);font:inherit;font-size:12px;
+    font-weight:580;padding:7px 13px;border-radius:99px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.22s ease;}
+  .collapse-toggle:hover{color:var(--text);border-color:var(--pink);}
+  .collapse-toggle .chevron{width:12px;height:12px;transition:transform .45s cubic-bezier(.4,0,.2,1);}
+  .collapse-toggle.open .chevron{transform:rotate(180deg);}
+  .collapsible-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.4,0,.2,1);}
+  .collapsible-content.open{grid-template-rows:1fr;}
+  .collapsible-inner{overflow:hidden;min-height:0;opacity:0;transition:opacity .35s ease;}
+  .collapsible-content.open .collapsible-inner{opacity:1;transition-delay:.08s;}
+  .meas-group{margin-bottom:20px;}
+  .meas-group:first-child{margin-top:18px;}
+  .meas-group:last-child{margin-bottom:0;}
+  .meas-group-title{font-size:11px;font-weight:640;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);opacity:.7;margin-bottom:11px;padding-left:2px;}
+  .meas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;}
+  .piggy-layout{display:flex;gap:26px;align-items:center;flex-wrap:wrap;}
+  .pig-svg{width:230px;max-width:100%;flex-shrink:0;height:auto;}
+  #pigFill{transition:transform 1s cubic-bezier(.2,.8,.3,1);}
+  .pig-shadow{transition:opacity .5s ease;}
+  .piggy-info{flex:1;min-width:220px;}
+  .amount{font-size:32px;font-weight:720;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1.1;
+    background:linear-gradient(135deg,#ff6fa5,#a98bff);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .goal{font-size:12.5px;color:var(--muted);margin:4px 0 14px;}
+  .piggy-pct{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:9px;font-weight:520;}
+  .piggy-pct b{color:var(--pink);font-weight:680;}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;}
+  .chip{border:1px solid var(--line);background:var(--soft);color:var(--text);font:inherit;font-size:12px;font-weight:600;
+    padding:7px 13px;border-radius:99px;cursor:pointer;transition:.2s ease;}
+  .chip:hover{border-color:#ffc3da;background:var(--pink-soft);color:#e04a86;transform:translateY(-1px);}
+  .chip:active{transform:translateY(0) scale(.96);}
+  .add-row{display:flex;gap:9px;margin-top:14px;}
+  .add-row .field-box{flex:1;}
+  .piggy-actions{display:flex;gap:9px;margin-top:10px;}
+  .piggy-btn{flex:1;border:1px solid var(--line);background:var(--soft);color:var(--text);font:inherit;font-size:13px;
+    font-weight:640;padding:11px 14px;border-radius:13px;cursor:pointer;transition:.2s ease;}
+  .piggy-btn.add{background:linear-gradient(135deg,#ff7fae,#ff5f9e);color:#fff;border-color:transparent;
+    box-shadow:0 8px 20px -10px rgba(255,95,158,.7);}
+  .piggy-btn.add:hover{transform:translateY(-1px);box-shadow:0 12px 24px -10px rgba(255,95,158,.85);}
+  .piggy-btn.sub:hover{color:var(--danger);border-color:#ffd5d2;background:#fff7f7;}
+  [data-theme="dark"] .piggy-btn.sub:hover{background:#2a1a1a;border-color:#4a2828;}
+  .piggy-btn:active{transform:scale(.97);}
+  .history-toggle{margin-top:12px;border:1px solid var(--line);background:var(--soft);color:var(--muted);font:inherit;
+    font-size:12px;font-weight:580;padding:9px 14px;border-radius:12px;cursor:pointer;display:flex;align-items:center;
+    justify-content:center;gap:7px;width:100%;transition:.22s ease;}
+  .history-toggle:hover{color:var(--text);border-color:var(--pink);}
+  .history-toggle .chevron{width:12px;height:12px;transition:transform .45s cubic-bezier(.4,0,.2,1);}
+  .history-toggle.open .chevron{transform:rotate(180deg);}
+  .history-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.4,0,.2,1);}
+  .history-panel.open{grid-template-rows:1fr;}
+  .history-inner{overflow:hidden;min-height:0;opacity:0;transition:opacity .35s ease;}
+  .history-panel.open .history-inner{opacity:1;transition-delay:.08s;}
+  .history-list{padding-top:12px;max-height:280px;overflow-y:auto;padding-right:4px;}
+  .history-list::-webkit-scrollbar{width:6px;}
+  .history-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+  .history-item{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:11px;
+    background:var(--soft);margin-bottom:6px;font-size:12.5px;transition:background-color .25s ease;}
+  .history-item.add .history-amount{color:var(--green);font-weight:660;}
+  .history-item.sub .history-amount{color:var(--danger);font-weight:660;}
+  .history-date{color:var(--muted);font-weight:520;}
+  .history-empty{padding:14px;text-align:center;font-size:12.5px;color:var(--muted);}
+  .goal-done{margin-top:12px;font-size:13px;font-weight:640;color:var(--green);display:none;}
+  .goal-done.show{display:block;animation:rise .5s ease;}
+
+  /* ---------- refill modal ---------- */
+  .refill-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:6px;}
+  .refill-field{display:flex;align-items:center;gap:10px;}
+  .refill-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .refill-name{flex:1;font-size:13.5px;font-weight:600;letter-spacing:-.01em;min-width:0;}
+  .refill-field .field-box{width:130px;flex-shrink:0;padding:7px 11px;}
+  .refill-field .field-box input{font-size:14px;text-align:right;}
+
+  /* ---------- goal modal ---------- */
+  .goal-edit-row{display:flex;align-items:center;gap:12px;}
+  .goal-edit-label{flex:1;font-size:13.5px;font-weight:600;letter-spacing:-.01em;}
+  .goal-edit-row .field-box{width:180px;flex-shrink:0;padding:8px 12px;}
+  .goal-edit-row .field-box input{font-size:15px;text-align:right;}
+
+  /* ---------- EPILATION ---------- */
+  .epil-hero{display:flex;align-items:baseline;gap:12px;margin-bottom:8px;}
+  .epil-days-big{
+    font-size:62px;font-weight:720;letter-spacing:-.045em;line-height:.95;
+    font-variant-numeric:tabular-nums;
+    background:linear-gradient(135deg,#a98bff 5%,#ff6fa5 55%,#ffb3d1 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    transition:opacity .4s ease;
+  }
+  .epil-days-big.overdue{
+    background:linear-gradient(135deg,#ff3b30 5%,#ff6fa5 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .epil-unit{font-size:20px;font-weight:560;color:var(--muted);letter-spacing:-.01em;}
+  .epil-scale{position:relative;margin-bottom:6px;}
+  .epil-fill{
+    height:100%;border-radius:99px;width:0;
+    background:linear-gradient(90deg,#c2b3ff,#a98bff 40%,#ff6fa5 100%);
+    transition:width .9s cubic-bezier(.2,.8,.3,1), background .5s ease;
+  }
+  .epil-fill.overdue{
+    background:linear-gradient(90deg,#ff9f0a,#ff3b30);
+  }
+  .epil-marker{
+    position:absolute;top:-4px;width:3px;height:16px;border-radius:2px;
+    background:var(--text);transform:translateX(-50%);
+    box-shadow:0 0 0 3px var(--card), 0 2px 6px rgba(0,0,0,.25);
+    transition:left .55s cubic-bezier(.2,.8,.3,1);left:0;
+    pointer-events:none;
+  }
+  .epil-scale-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);font-weight:520;margin-top:8px;}
+  .epil-actions{display:flex;gap:9px;margin-top:18px;}
+  .epil-info{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;color:var(--muted);margin-bottom:10px;flex-wrap:wrap;}
+  .epil-info b{color:var(--text);font-weight:650;}
+
+  /* ---------- EPILATION ZONES ---------- */
+  .epil-zone-item{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border:1px solid var(--line);
+    border-radius:14px;background:var(--soft);margin-bottom:10px;transition:.2s;}
+  .epil-zone-item.done{border-color:rgba(52,209,125,.35);background:rgba(52,209,125,.06);}
+  .epil-zone-top{display:flex;align-items:center;gap:10px;}
+  .epil-zone-check{width:22px;height:22px;flex-shrink:0;border-radius:50%;border:2px solid var(--line);
+    background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;padding:0;}
+  .epil-zone-check:hover{border-color:var(--pink);}
+  .epil-zone-check.done{background:var(--green);border-color:var(--green);}
+  .epil-zone-check svg{width:12px;height:12px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .2s;}
+  .epil-zone-check.done svg{opacity:1;}
+  .epil-zone-name{flex:1;font-size:14px;font-weight:640;min-width:0;}
+  .epil-zone-item.done .epil-zone-name{text-decoration:line-through;color:var(--muted);}
+  .epil-zone-sessions{font-size:12px;font-weight:640;color:var(--pink);white-space:nowrap;}
+  .epil-zone-blocks{display:flex;gap:4px;flex-wrap:wrap;}
+  .epil-block{width:16px;height:16px;border-radius:4px;background:var(--line);transition:background .3s,transform .2s;}
+  .epil-block.filled{background:linear-gradient(135deg,#ff6fa5,#a98bff);}
+  .epil-zone-mark{border:1px solid var(--line);background:var(--card);color:var(--muted);
+    font:inherit;font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:10px;
+    cursor:pointer;transition:.2s;white-space:nowrap;}
+  .epil-zone-mark:hover{border-color:var(--pink);color:var(--pink);background:var(--pink-soft);}
+  .epil-zone-mark:active{transform:scale(.96);}
+  .epil-zone-del{width:26px;height:26px;flex-shrink:0;padding:0;border:0;background:transparent;
+    color:var(--muted);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    opacity:.5;transition:.2s;}
+  .epil-zone-del:hover{opacity:1;color:var(--danger);background:rgba(255,59,48,.08);}
+  .epil-zone-del svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;}
+  .epil-empty{font-size:12.5px;color:var(--muted);text-align:center;padding:14px 10px;border:1px dashed var(--line);border-radius:14px;}
+
+  /* ---------- EXPENSES ---------- */
+  .expenses-total{text-align:center;padding:6px 0 14px;}
+  .expenses-amount{
+    font-size:44px;font-weight:720;letter-spacing:-.04em;line-height:1.05;
+    font-variant-numeric:tabular-nums;
+    background:linear-gradient(135deg,#ff6fa5 10%,#a98bff 90%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .expenses-label{font-size:12.5px;color:var(--muted);font-weight:560;margin-top:2px;}
+  .expenses-breakdown{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+  .expense-row{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 14px;border-radius:14px;
+    background:var(--soft);border:1px solid var(--line);
+    transition:border-color .25s ease, transform .25s ease, background-color .35s ease;
+  }
+  .expense-row:hover{border-color:var(--stat-hover-border);transform:translateY(-1px);}
+  .expense-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1;}
+  .expense-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px var(--soft);}
+  .expense-text{min-width:0;}
+  .expense-name{font-size:13.5px;font-weight:640;letter-spacing:-.01em;}
+  .expense-details{font-size:11px;color:var(--muted);margin-top:2px;font-weight:520;}
+  .expense-cost{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.01em;color:var(--text);}
+  .expense-year{
+    text-align:center;font-size:12.5px;color:var(--muted);
+    padding-top:14px;border-top:1px solid var(--line);
+  }
+  .expense-year b{color:var(--text);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;}
+
+  /* ---------- ANALYSES ---------- */
+  .analys-grid{display:flex;flex-direction:column;gap:14px;}
+  .analys-item{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--soft);
+    transition:border-color .3s ease, transform .25s ease;}
+  .analys-item:hover{transform:translateY(-1px);border-color:var(--stat-hover-border);}
+  .analys-item-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px;flex-wrap:wrap;}
+  .analys-item-title{font-size:14px;font-weight:660;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;}
+  .analys-item-badge{font-size:11px;font-weight:640;padding:3px 9px;border-radius:99px;white-space:nowrap;
+    transition:color .4s ease, background-color .4s ease;}
+  .analys-item-badge.green{color:#0d8a42;background:rgba(18,161,80,.13);}
+  .analys-item-badge.yellow{color:#a16a00;background:rgba(255,159,10,.15);}
+  .analys-item-badge.red{color:#c72016;background:rgba(255,59,48,.14);}
+  [data-theme="dark"] .analys-item-badge.green{color:#5ee59e;background:rgba(52,209,125,.16);}
+  [data-theme="dark"] .analys-item-badge.yellow{color:#ffc46b;background:rgba(255,179,64,.16);}
+  [data-theme="dark"] .analys-item-badge.red{color:#ff8b84;background:rgba(255,95,87,.16);}
+  .analys-dates{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);
+    margin-bottom:10px;font-weight:520;gap:10px;flex-wrap:wrap;}
+  .analys-dates b{color:var(--text);font-weight:620;}
+  .analys-item .bar{height:8px;margin-bottom:11px;}
+  .analys-item .bar-fill{
+    background:linear-gradient(90deg,#ffb3d1,#ff6fa5);
+    transition:width .85s cubic-bezier(.2,.8,.3,1);
+  }
+  .analys-list{display:flex;flex-wrap:wrap;gap:5px;}
+  .analys-tag{font-size:11px;font-weight:540;padding:3px 9px;border-radius:99px;
+    background:var(--card);border:1px solid var(--line);color:var(--muted);
+    transition:color .2s ease, border-color .2s ease;}
+  .analys-tag:hover{color:var(--text);border-color:var(--pink);}
+  .analys-tag.never{
+    color:#c72016;border-color:rgba(255,59,48,.35);background:rgba(255,59,48,.06);
+  }
+  [data-theme="dark"] .analys-tag.never{
+    color:#ff8b84;border-color:rgba(255,95,87,.35);background:rgba(255,95,87,.08);
+  }
+  .analys-warn{
+    margin-top:10px;font-size:11.5px;font-weight:600;color:#c72016;
+    display:flex;align-items:center;gap:6px;line-height:1.4;
+  }
+  [data-theme="dark"] .analys-warn{color:#ff8b84;}
+
+  .analys-foot{margin-top:12px;}
+  .analys-done-btn{
+    width:100%;border:1px solid var(--line);background:var(--card);color:var(--muted);
+    font:inherit;font-size:12.5px;font-weight:620;
+    padding:9px 12px;border-radius:12px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    transition:.2s ease;
+  }
+  .analys-done-btn svg{width:13px;height:13px;stroke-width:2.6;}
+  .analys-done-btn:hover{
+    border-color:var(--pink);color:var(--pink);background:var(--pink-soft);
+  }
+  .analys-done-btn:active{transform:scale(.98);}
+  .analys-done-btn.done{
+    border-color:rgba(18,161,80,.35);color:#0d8a42;background:rgba(18,161,80,.08);
+    cursor:default;
+  }
+  [data-theme="dark"] .analys-done-btn.done{
+    color:#5ee59e;border-color:rgba(52,209,125,.35);background:rgba(52,209,125,.1);
+  }
+
+  .analys-actions{margin-top:14px;}
+  .prep-btn{width:100%;border:1px solid var(--line);background:var(--soft);color:var(--text);
+    font:inherit;font-size:13px;font-weight:620;padding:11px 14px;border-radius:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s ease;}
+  .prep-btn:hover{border-color:var(--pink);color:var(--pink);background:var(--pink-soft);}
+  .prep-btn:active{transform:scale(.98);}
+
+  /* ---------- prep modal ---------- */
+  .prep-modal{max-width:520px;max-height:84vh;display:flex;flex-direction:column;padding:0;overflow:hidden;}
+  .prep-head{padding:22px 24px 14px;border-bottom:1px solid var(--line);flex-shrink:0;}
+  .prep-head h3{margin:0 0 4px;}
+  .prep-head p{margin:0;font-size:12.5px;}
+  .prep-body{overflow-y:auto;padding:18px 24px 8px;flex:1;}
+  .prep-body::-webkit-scrollbar{width:6px;}
+  .prep-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+  .prep-section{margin-bottom:20px;}
+  .prep-section:last-child{margin-bottom:8px;}
+  .prep-section-title{font-size:12px;font-weight:680;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--pink);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .prep-section-title::before{content:'';width:4px;height:14px;background:var(--pink);border-radius:2px;}
+  .prep-section.urgent .prep-section-title{color:var(--danger);}
+  .prep-section.urgent .prep-section-title::before{background:var(--danger);}
+  .prep-section.urgent .prep-list li::before{background:var(--danger);}
+  .prep-list{margin:0;padding:0;list-style:none;}
+  .prep-list li{position:relative;font-size:13px;line-height:1.55;color:var(--text);
+    margin-bottom:7px;padding-left:16px;}
+  .prep-list li:last-child{margin-bottom:0;}
+  .prep-list li::before{content:'';position:absolute;left:2px;top:8px;width:5px;height:5px;
+    border-radius:50%;background:var(--pink);opacity:.65;}
+  .prep-foot{padding:12px 24px 20px;border-top:1px solid var(--line);flex-shrink:0;}
+  .prep-foot .modal-actions{margin-top:0;}
+
+  /* ---------- todo ---------- */
+  .todo-add{display:flex;gap:9px;margin-bottom:14px;}
+  .todo-add .field-box{flex:1;min-width:0;}
+  .todo-add-btn{width:46px;flex-shrink:0;border:0;border-radius:13px;cursor:pointer;
+    background:linear-gradient(135deg,#ff7fae,#ff5f9e);color:#fff;
+    font:inherit;font-size:22px;font-weight:400;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 20px -12px rgba(255,95,158,.85);
+    transition:transform .2s ease, box-shadow .2s ease;}
+  .todo-add-btn:hover{transform:translateY(-1px);box-shadow:0 12px 24px -12px rgba(255,95,158,1);}
+  .todo-add-btn:active{transform:scale(.95);}
+  .todo-bar{height:6px;margin-bottom:16px;}
+  .todo-list{display:flex;flex-direction:column;gap:8px;}
+  .todo-item{display:flex;align-items:center;gap:11px;padding:11px 12px 11px 13px;
+    border:1px solid var(--line);border-radius:15px;background:var(--soft);
+    transition:border-color .25s ease, background-color .25s ease,
+               transform .28s cubic-bezier(.2,.8,.3,1), opacity .28s ease;}
+  .todo-item:hover{border-color:var(--stat-hover-border);}
+  .todo-item.leaving{opacity:0;transform:scale(.94);}
+  .todo-item.arriving{animation:todoIn .42s cubic-bezier(.2,.8,.3,1) both;}
+  @keyframes todoIn{from{opacity:0;transform:translateY(-10px) scale(.96);}to{opacity:1;transform:none;}}
+  .todo-check{width:23px;height:23px;flex-shrink:0;padding:0;border-radius:50%;border:2px solid var(--line);
+    background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:background-color .3s ease, border-color .3s ease, transform .2s ease;}
+  .todo-check:hover{border-color:var(--pink);transform:scale(1.1);}
+  .todo-check:active{transform:scale(.88);}
+  .todo-check svg{width:12px;height:12px;fill:none;stroke:#fff;stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .34s cubic-bezier(.4,0,.2,1) .05s;}
+  .todo-item.done .todo-check{background:var(--pink);border-color:var(--pink);}
+  .todo-item.done .todo-check svg{stroke-dashoffset:0;}
+  .todo-text{flex:1;min-width:0;position:relative;font-size:14px;font-weight:560;letter-spacing:-.01em;line-height:1.4;
+    overflow-wrap:anywhere;word-break:break-word;transition:color .35s ease;}
+  .todo-text::after{content:'';position:absolute;left:0;top:calc(50% - 1px);width:100%;height:1.5px;border-radius:2px;
+    background:currentColor;opacity:.6;transform:scaleX(0);transform-origin:left center;
+    transition:transform .38s cubic-bezier(.4,0,.2,1);}
+  .todo-item.done .todo-text{color:var(--muted);}
+  .todo-item.done .todo-text::after{transform:scaleX(1);}
+  .todo-del{width:28px;height:28px;flex-shrink:0;padding:0;border:0;background:transparent;color:var(--muted);
+    border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;
+    transition:opacity .22s ease, background-color .22s ease, color .22s ease, transform .2s ease;}
+  .todo-item:hover .todo-del{opacity:.55;}
+  .todo-del:hover{opacity:1;color:var(--danger);background:rgba(255,59,48,.09);}
+  .todo-del:active{transform:scale(.88);}
+  .todo-del svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;}
+  @media (hover:none){ .todo-del{opacity:.4;} }
+  .todo-empty{font-size:12.5px;color:var(--muted);text-align:center;padding:16px 10px;
+    border:1px dashed var(--line);border-radius:14px;transition:opacity .3s ease;}
+  .todo-empty.hide{display:none;}
+  .todo-done-head{display:flex;align-items:center;gap:8px;margin-top:16px;}
+  .todo-done-head .collapse-toggle{flex:1;justify-content:center;}
+  .todo-clear{border:1px solid var(--line);background:var(--soft);color:var(--muted);
+    font:inherit;font-size:12px;font-weight:580;padding:7px 13px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:.22s ease;}
+  .todo-clear:hover{color:var(--danger);border-color:#ffd5d2;background:#fff7f7;}
+  [data-theme="dark"] .todo-clear:hover{background:#2a1a1a;border-color:#4a2828;}
+  .todo-done-body{padding-top:12px;}
+
+  /* ---------- modals ---------- */
+  .overlay{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:20px;
+    background:rgba(18,19,26,.32);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+    opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  [data-theme="dark"] .overlay{background:rgba(0,0,0,.55);}
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .modal{background:var(--card);border-radius:24px;padding:26px 24px 22px;width:100%;max-width:400px;
+    box-shadow:0 40px 90px -25px rgba(18,19,26,.45);transform:translateY(14px) scale(.965);
+    transition:transform .32s cubic-bezier(.2,.8,.3,1), background-color .5s ease;
+    max-height:90vh;overflow-y:auto;}
+  .overlay.open .modal{transform:translateY(0) scale(1);}
+  .modal h3{margin:0 0 8px;font-size:17px;font-weight:680;letter-spacing:-.015em;}
+  .modal p{margin:0 0 18px;font-size:13.5px;color:var(--muted);line-height:1.5;}
+  .modal input[type="password"]{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px 15px;font:inherit;
+    font-size:19px;font-weight:660;letter-spacing:.35em;text-align:center;outline:0;background:var(--soft);
+    transition:.2s ease;color:var(--text);}
+  .modal input[type="password"]:focus{border-color:#ffc3da;box-shadow:0 0 0 4px var(--pink-soft);background:var(--card);}
+  .modal-actions{display:flex;gap:9px;margin-top:18px;}
+  .modal-actions button{flex:1;border:0;font:inherit;font-size:13.5px;font-weight:640;padding:12px;border-radius:13px;
+    cursor:pointer;transition:.2s ease;}
+  .btn-ghost{background:var(--soft);color:var(--muted);border:1px solid var(--line)!important;}
+  .btn-ghost:hover{background:var(--line);}
+  .btn-confirm{background:linear-gradient(135deg,#ff7fae,#ff5f9e);color:#fff;}
+  .btn-danger{background:linear-gradient(135deg,#ff5f57,#ff3b30);color:#fff;}
+  .modal-actions button:active{transform:scale(.97);}
+  .err{font-size:12.5px;color:var(--danger);margin-top:10px;font-weight:560;opacity:0;transition:opacity .2s ease;height:0;}
+  .err.show{opacity:1;height:auto;}
+  .shake{animation:shake .42s cubic-bezier(.36,.07,.19,.97);}
+  @keyframes shake{
+    10%,90%{transform:translateX(-2px);}
+    20%,80%{transform:translateX(4px);}
+    30%,50%,70%{transform:translateX(-7px);}
+    40%,60%{transform:translateX(7px);}
+  }
+
+  /* ---------- AUTH SCREEN ---------- */
+  .auth-screen{
+    position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:
+      radial-gradient(900px 520px at 8% -12%, var(--bg-1) 0%, rgba(255,255,255,0) 62%),
+      radial-gradient(900px 520px at 95% -4%, var(--bg-2) 0%, rgba(231,242,255,0) 60%),
+      var(--bg-base);
+    background-attachment:fixed;
+    transition:opacity .5s ease, visibility .5s ease;
+  }
+  .auth-screen.hidden{display:none;}
+  .auth-card{
+    background:var(--card);border:1px solid var(--line);border-radius:28px;
+    padding:38px 30px 28px;max-width:360px;width:100%;
+    box-shadow:var(--shadow);text-align:center;
+    animation:pinRise .7s cubic-bezier(.2,.8,.3,1) both;
+  }
+  .auth-logo{display:inline-flex;align-items:center;gap:11px;margin-bottom:20px;}
+  .auth-title{font-size:19px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px;}
+  .auth-sub{font-size:13px;color:var(--muted);margin:0 0 26px;line-height:1.5;}
+  .google-btn{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    width:100%;padding:14px;border-radius:14px;
+    border:1px solid var(--line);background:var(--card);color:var(--text);
+    font:inherit;font-size:15px;font-weight:640;cursor:pointer;
+    transition:.2s ease;box-shadow:0 2px 8px rgba(0,0,0,.05);
+  }
+  .google-btn:hover{border-color:var(--pink);background:var(--pink-soft);color:var(--pink);}
+  .google-btn:active{transform:scale(.97);}
+  .google-btn svg{width:20px;height:20px;flex-shrink:0;}
+  .auth-note{font-size:11.5px;color:var(--muted);margin-top:20px;line-height:1.5;}
+
+  @keyframes pinRise{
+    from{opacity:0;transform:translateY(24px) scale(.96);}
+    to{opacity:1;transform:none;}
+  }
+
+  /* ---------- confetti ---------- */
+  .confetti-layer{
+    position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;
+  }
+
+  /* ---------- view transitions ---------- */
+  @media (prefers-reduced-motion: no-preference){
+    ::view-transition-old(root),::view-transition-new(root){
+      animation-duration:.5s;animation-timing-function:cubic-bezier(.4,0,.2,1);
+    }
+  }
+  @media (max-width:560px){
+    body{padding:20px 13px 60px;}
+    .card{padding:20px 17px;border-radius:20px;}
+    .hero-num{font-size:52px;}
+    .grid3{gap:8px;}
+    .stat{padding:12px 6px;}
+    .stat-val{font-size:20px;}
+    .piggy-layout{gap:14px;justify-content:center;}
+    .pig-svg{width:190px;}
+    .piggy-info{min-width:100%;}
+    .amount{font-size:27px;}
+    .meas-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+    .weight-value input{font-size:38px;}
+    .weight-btn{width:40px;height:40px;font-size:20px;}
+    .piggy-actions{flex-direction:column;}
+    .facts-box{padding:8px 11px;}
+    .facts-text{font-size:12px;}
+    .todo-text{font-size:13.5px;}
+    .todo-done-head .collapse-toggle{font-size:11.5px;}
+    .refill-field .field-box{width:110px;}
+    .goal-edit-row .field-box{width:140px;}
+    .auth-card{padding:30px 22px 24px;border-radius:24px;}
+    .prep-modal{max-height:88vh;}
+    .prep-head,.prep-foot{padding-left:18px;padding-right:18px;}
+    .prep-body{padding-left:18px;padding-right:18px;}
+    .epil-days-big{font-size:48px;}
+    .epil-unit{font-size:17px;}
+    .expenses-amount{font-size:36px;}
+    .epil-actions{flex-direction:column;}
+    .epil-zone-blocks{gap:3px;}
+    .epil-block{width:13px;height:13px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ AUTH SCREEN (GOOGLE) ============ -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="flag"></span>
+      <span style="font-size:15px;font-weight:680;letter-spacing:-.015em;">Мой путь</span>
+    </div>
+    <h2 class="auth-title">Добро пожаловать</h2>
+    <p class="auth-sub">Войди через Google, чтобы прогресс сохранялся в облаке и был доступен с любого устройства</p>
+    <button class="google-btn" id="googleLoginBtn">
+      <svg viewBox="0 0 48 48">
+        <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.2 6.1 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
+        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.2 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+        <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.3-11.3-8.1l-6.6 4.8C9.7 39.7 16.3 44 24 44z"/>
+        <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-1.1 3-3.5 5.4-6.4 6.7l6.2 5.2C40.9 35.8 44 30.4 44 24c0-1.3-.1-2.6-.4-3.9z"/>
+      </svg>
+      Войти через Google
+    </button>
+    <p class="auth-note">Данные надёжно сохраняются в Firebase и привязаны только к твоему аккаунту Google.</p>
+  </div>
+</div>
+
+<!-- ============ MAIN CONTENT ============ -->
+<div class="wrap" id="mainWrap" style="display:none;">
+
+  <header class="top">
+    <div class="brand">
+      <span class="flag"></span>
+      <h1>Мой путь</h1>
+    </div>
+    <div class="top-actions">
+      <span class="badge" id="userEmailBadge" style="display:none;"></span>
+      <button class="theme-btn" id="themeToggle" aria-label="Сменить тему">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="ghost-btn" id="logoutBtn">Выйти</button>
+      <button class="ghost-btn" id="resetBtn">Сброс</button>
+    </div>
+  </header>
+
+  <!-- 1. HRT -->
+  <section class="card" style="--d:.05s">
+    <div class="card-head">
+      <h2>Дни HRT</h2>
+      <span class="badge">с 31 декабря 2025</span>
+    </div>
+    <div class="hero">
+      <span class="hero-num" id="daysBig">0</span>
+      <span class="hero-unit" id="daysUnit">дней</span>
+    </div>
+    <div class="grid3">
+      <div class="stat">
+        <div class="stat-val" id="statWeeks">—</div>
+        <div class="stat-lbl">недель</div>
+        <div class="stat-sub" id="statWeeksSub">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statMonths">—</div>
+        <div class="stat-lbl">месяцев</div>
+        <div class="stat-sub" id="statMonthsSub">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statYears">—</div>
+        <div class="stat-lbl">лет</div>
+        <div class="stat-sub" id="statYearsSub">—</div>
+      </div>
+    </div>
+    <div class="ms-head">
+      <span>До рубежа <b id="msTarget">100</b> дней</span>
+      <span class="ms-left" id="msLeft">—</span>
+    </div>
+    <div class="bar"><div class="bar-fill" id="msFill"></div></div>
+
+    <div class="facts-box">
+      <span class="facts-icon">✿</span>
+      <span class="facts-text" id="factsText">—</span>
+    </div>
+  </section>
+
+  <!-- 2. MEDS -->
+  <section class="card" style="--d:.10s">
+    <div class="card-head">
+      <h2>Лекарства</h2>
+      <span class="badge">Авто-списание</span>
+    </div>
+    <div id="medsRoot"></div>
+    <div style="margin-top:14px;">
+      <button class="prep-btn" id="addMedBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Добавить препарат
+      </button>
+    </div>
+  </section>
+
+  <!-- 3. EPILATION -->
+  <section class="card" style="--d:.12s">
+    <div class="card-head">
+      <h2>Эпиляция</h2>
+      <span class="badge clickable" id="epilBadge" title="Нажми, чтобы настроить интервал">—</span>
+    </div>
+    <div class="epil-hero">
+      <span class="epil-days-big" id="epilDaysBig">0</span>
+      <span class="epil-unit" id="epilDaysUnit">дней</span>
+    </div>
+    <div class="epil-info">
+      <span>Последняя: <b id="epilLast">—</b></span>
+      <span>Следующая: <b id="epilNext">—</b></span>
+    </div>
+    <div class="epil-scale">
+      <div class="bar"><div class="bar-fill epil-fill" id="epilFill"></div></div>
+      <div class="epil-marker" id="epilMarker"></div>
+    </div>
+    <div class="epil-scale-labels">
+      <span>прошлая</span>
+      <span id="epilMidLabel">—</span>
+      <span>следующая</span>
+    </div>
+    <div class="epil-actions" style="margin-top:18px;">
+      <button class="piggy-btn add" id="epilSettingsBtn" style="flex:1;">Настроить дату и интервал</button>
+      <button class="piggy-btn" id="addEpilZoneBtn" style="flex:1;">+ Добавить зону</button>
+    </div>
+    <div id="epilZonesRoot" style="margin-top:20px;"></div>
+  </section>
+
+  <!-- 4. EXPENSES -->
+  <section class="card" style="--d:.14s">
+    <div class="card-head">
+      <h2>Расходы на гормоны</h2>
+      <button class="collapse-toggle" id="expToggle" aria-expanded="false">
+        <span id="expToggleLabel">Подробнее</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+    </div>
+    <div class="expenses-total">
+      <div class="expenses-amount" id="expMonthly">— ₽</div>
+      <div class="expenses-label">в месяц, при текущем приёме</div>
+    </div>
+    <div class="collapsible-content" id="expContent">
+      <div class="collapsible-inner">
+        <div class="expenses-breakdown" id="expBreakdown"></div>
+        <div class="expense-year">
+          За год: <b id="expYearly">— ₽</b>
+        </div>
+        <div style="margin-top:14px;">
+          <button class="history-toggle" id="priceEditBtn">
+            <span>Изменить стоимость препаратов</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PIGGY -->
+  <section class="card" style="--d:.18s">
+    <div class="card-head">
+      <h2>Копилка</h2>
+      <span class="badge clickable" id="goalBadge" title="Нажми, чтобы изменить цель">Цель 1 100 000 ₽</span>
+    </div>
+    <div class="piggy-layout">
+      <svg class="pig-svg" viewBox="0 0 220 170" aria-hidden="true">
+        <defs>
+          <clipPath id="pigClip">
+            <ellipse cx="105" cy="88" rx="72" ry="52"/>
+            <ellipse cx="182" cy="98" rx="17" ry="22"/>
+            <path d="M132 50 C128 16 150 4 168 20 C174 36 162 52 146 52 Z"/>
+          </clipPath>
+          <linearGradient id="pigGrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#ff5f9e"/>
+            <stop offset="100%" stop-color="#ffc7dd"/>
+          </linearGradient>
+        </defs>
+        <ellipse class="pig-shadow" cx="108" cy="150" rx="76" ry="8" fill="var(--soft)"/>
+        <g clip-path="url(#pigClip)">
+          <rect id="pigFill" x="0" y="0" width="220" height="170" fill="url(#pigGrad)"/>
+        </g>
+        <g fill="none" stroke="var(--line)" stroke-width="3" stroke-linejoin="round">
+          <ellipse cx="105" cy="88" rx="72" ry="52"/>
+          <ellipse cx="182" cy="98" rx="17" ry="22"/>
+          <path d="M132 50 C128 16 150 4 168 20 C174 36 162 52 146 52 Z"/>
+          <path d="M33 78 c-16 -8 -24 8 -11 15 c7 4 11 -5 4 -8" stroke-linecap="round"/>
+        </g>
+        <circle cx="150" cy="76" r="4.5" fill="var(--text)"/>
+        <ellipse cx="187" cy="90" rx="2.8" ry="4.2" fill="var(--muted)"/>
+        <ellipse cx="187" cy="107" rx="2.8" ry="4.2" fill="var(--muted)"/>
+        <rect x="78" y="38" width="44" height="10" rx="5" fill="var(--card)" stroke="var(--line)" stroke-width="2.5"/>
+      </svg>
+      <div class="piggy-info">
+        <div class="amount" id="savedAmount">0 ₽</div>
+        <div class="goal" id="savedGoal">из 1 100 000 ₽</div>
+        <div class="bar"><div class="bar-fill" id="saveFill"></div></div>
+        <div class="piggy-pct">
+          <span>Накоплено <b id="savePct">0%</b></span>
+          <span id="saveLeft">осталось 1 100 000 ₽</span>
+        </div>
+        <div class="chips">
+          <button class="chip" data-add="1000">+1 000</button>
+          <button class="chip" data-add="5000">+5 000</button>
+          <button class="chip" data-add="10000">+10 000</button>
+          <button class="chip" data-add="50000">+50 000</button>
+        </div>
+        <div class="add-row">
+          <span class="field-box">
+            <input type="number" id="moneyInput" placeholder="Сумма" min="0" step="1">
+            <span class="field-unit">₽</span>
+          </span>
+        </div>
+        <div class="piggy-actions">
+          <button class="piggy-btn add" id="addBtn">+ Пополнить</button>
+          <button class="piggy-btn sub" id="subBtn">− Вычесть</button>
+        </div>
+        <button class="history-toggle" id="historyToggle" aria-expanded="false">
+          <span>История операций</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+        <div class="history-panel" id="historyPanel">
+          <div class="history-inner">
+            <div class="history-list" id="historyList"></div>
+          </div>
+        </div>
+        <div class="goal-done" id="goalDone">🎉 Цель достигнута — ты невероятная!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. TODO -->
+  <section class="card" id="todoCard" style="--d:.22s">
+    <div class="card-head">
+      <h2>Задачи</h2>
+      <span class="badge" id="todoBadge">—</span>
+    </div>
+    <div class="todo-add">
+      <span class="field-box">
+        <input type="text" id="todoInput" placeholder="Что хочешь сделать?" maxlength="200" autocomplete="off" spellcheck="false">
+      </span>
+      <button class="todo-add-btn" id="todoAddBtn" aria-label="Добавить задачу">+</button>
+    </div>
+    <div class="bar todo-bar"><div class="bar-fill" id="todoFill"></div></div>
+    <div class="todo-list" id="todoActiveList"></div>
+    <div class="todo-empty" id="todoActiveEmpty">Пока нет задач — добавь первую ✿</div>
+    <div class="todo-done-head">
+      <button class="collapse-toggle" id="todoDoneToggle" aria-expanded="false">
+        <span id="todoDoneLabel">Выполненные · 0</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+      <button class="todo-clear" id="todoClear">Очистить</button>
+    </div>
+    <div class="collapsible-content" id="todoDoneContent">
+      <div class="collapsible-inner">
+        <div class="todo-done-body">
+          <div class="todo-list" id="todoDoneList"></div>
+          <div class="todo-empty" id="todoDoneEmpty">Здесь появятся выполненные задачи</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. WEIGHT -->
+  <section class="card" style="--d:.27s">
+    <div class="card-head">
+      <h2>Вес</h2>
+      <span class="badge" id="weightBmi">ИМТ —</span>
+    </div>
+    <div class="weight-display">
+      <button class="weight-btn" id="weightDown" aria-label="Уменьшить">−</button>
+      <div class="weight-value">
+        <input type="number" id="weightInput" step="0.01" min="30" max="200" inputmode="decimal">
+        <span class="weight-unit">кг</span>
+      </div>
+      <button class="weight-btn" id="weightUp" aria-label="Увеличить">+</button>
+    </div>
+    <div class="weight-status" id="weightStatus">—</div>
+    <div class="weight-scale-wrap">
+      <div class="weight-scale">
+        <div class="weight-marker" id="weightMarker"></div>
+      </div>
+    </div>
+    <div class="weight-scale-labels">
+      <span>16</span><span>18.5</span><span>25</span><span>30</span><span>35</span>
+    </div>
+  </section>
+
+  <!-- 8. ANALYSES -->
+  <section class="card" style="--d:.32s">
+    <div class="card-head">
+      <h2>Анализы</h2>
+      <span class="badge" id="analysSince">последняя сдача 26.07.2026</span>
+    </div>
+    <div class="analys-grid" id="analysRoot"></div>
+    <div class="analys-actions">
+      <button class="prep-btn" id="prepBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        Рекомендации по подготовке
+      </button>
+    </div>
+  </section>
+
+  <!-- 9. MEASUREMENTS -->
+  <section class="card" style="--d:.37s">
+    <div class="card-head">
+      <h2>Мерки</h2>
+      <button class="collapse-toggle" id="measToggle" aria-expanded="false">
+        <span id="measToggleLabel">Показать · 16 августа 2026</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+    </div>
+    <div class="collapsible-content" id="measContent">
+      <div class="collapsible-inner">
+        <div id="measRoot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. STATS -->
+  <section class="card" style="--d:.42s">
+    <div class="card-head">
+      <h2>Статистика</h2>
+      <button class="collapse-toggle" id="statsToggle" aria-expanded="false">
+        <span id="statsToggleLabel">Показать</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </button>
+    </div>
+    <div class="collapsible-content" id="statsContent">
+      <div class="collapsible-inner">
+        <div class="stats-inner">
+          <div class="badge" id="statsSince" style="display:inline-block;margin-bottom:14px;">—</div>
+          <div class="grid3" id="statsGrid" style="margin-bottom:0;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ MODAL: REFILL ============ -->
+<div class="overlay" id="refillModal">
+  <div class="modal" id="refillModalBox">
+    <h3>Пополнить запасы</h3>
+    <p>Укажи, сколько новых единиц куплено. Они прибавятся к текущему остатку.</p>
+    <div class="refill-grid" id="refillGrid"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="refillCancel">Отмена</button>
+      <button class="btn-confirm" id="refillOk">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: EDIT STOCK ============ -->
+<div class="overlay" id="editStockModal">
+  <div class="modal" id="editStockModalBox">
+    <h3>Изменить остаток</h3>
+    <p id="editStockDesc">Введи фактическое количество — оно заменит текущий остаток.</p>
+    <div class="field" style="margin-bottom:6px;">
+      <span class="field-lbl" id="editStockLabel">Остаток</span>
+      <span class="field-box">
+        <input type="number" id="editStockInput" min="0" step="0.01" inputmode="decimal">
+        <span class="field-unit" id="editStockUnit">шт</span>
+      </span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="editStockCancel">Отмена</button>
+      <button class="btn-confirm" id="editStockOk">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: GOAL EDIT ============ -->
+<div class="overlay" id="goalModal">
+  <div class="modal" id="goalModalBox">
+    <h3>Изменить цель копилки</h3>
+    <p>Введи новую сумму цели. Прогресс и все надписи пересчитаются автоматически.</p>
+    <div class="goal-edit-row">
+      <span class="goal-edit-label">Новая цель</span>
+      <span class="field-box">
+        <input type="number" id="goalInput" min="1" step="1000" inputmode="numeric" placeholder="1100000">
+        <span class="field-unit">₽</span>
+      </span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="goalCancel">Отмена</button>
+      <button class="btn-confirm" id="goalOk">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: EPILATION SETTINGS ============ -->
+<div class="overlay" id="epilModal">
+  <div class="modal" id="epilModalBox">
+    <h3>Настройки эпиляции</h3>
+    <p>Укажи дату последней процедуры и желаемый интервал. Отсчёт и шкала обновятся автоматически.</p>
+    <div class="field" style="margin-bottom:14px;">
+      <span class="field-lbl">Дата последней эпиляции</span>
+      <span class="field-box">
+        <input type="date" id="epilDateInput" style="font-size:14px;">
+      </span>
+    </div>
+    <div class="field" style="margin-bottom:6px;">
+      <span class="field-lbl">Интервал до следующей</span>
+      <span class="field-box">
+        <input type="number" id="epilIntervalInput" min="1" max="365" step="1" inputmode="numeric">
+        <span class="field-unit">дней</span>
+      </span>
+    </div>
+    <div class="chips" style="margin-top:12px;">
+      <button class="chip" data-epil-days="30">30 дней</button>
+      <button class="chip" data-epil-days="45">45 дней (1.5 мес)</button>
+      <button class="chip" data-epil-days="60">60 дней</button>
+      <button class="chip" data-epil-days="90">90 дней</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="epilCancel">Отмена</button>
+      <button class="btn-confirm" id="epilOk">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: ADD EPILATION ZONE ============ -->
+<div class="overlay" id="epilZoneModal">
+  <div class="modal" id="epilZoneModalBox">
+    <h3>Добавить зону эпиляции</h3>
+    <p>Например: «Лицо», «Ноги», «Подмышки». Укажи желаемое количество сеансов для полного курса.</p>
+    <div class="field" style="margin-bottom:14px;">
+      <span class="field-lbl">Название зоны</span>
+      <span class="field-box">
+        <input type="text" id="epilZoneNameInput" placeholder="Например, Лицо" maxlength="40">
+      </span>
+    </div>
+    <div class="field" style="margin-bottom:6px;">
+      <span class="field-lbl">Планируемое количество сеансов</span>
+      <span class="field-box">
+        <input type="number" id="epilZoneTotalInput" min="1" max="50" step="1" inputmode="numeric" value="10">
+        <span class="field-unit">сеансов</span>
+      </span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="epilZoneCancel">Отмена</button>
+      <button class="btn-confirm" id="epilZoneOk">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: PRICE EDIT ============ -->
+<div class="overlay" id="priceModal">
+  <div class="modal" id="priceModalBox">
+    <h3>Стоимость препаратов</h3>
+    <p>Укажи цену за единицу (за таблетку или за грамм). Расходы пересчитаются автоматически.</p>
+    <div class="refill-grid" id="priceGrid"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="priceCancel">Отмена</button>
+      <button class="btn-confirm" id="priceOk">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: ADD MEDICATION ============ -->
+<div class="overlay" id="addMedModal">
+  <div class="modal" id="addMedModalBox">
+    <h3>Новый препарат</h3>
+    <p>Добавь гормональный препарат с указанием дозировки, цены и начального остатка.</p>
+    <div class="field" style="margin-bottom:10px;">
+      <span class="field-lbl">Название</span>
+      <span class="field-box"><input type="text" id="newMedName" placeholder="Например, Прогестерон" maxlength="50"></span>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <span class="field-lbl">Форма</span>
+      <span class="field-box">
+        <select id="newMedForm">
+          <option value="tablet">Таблетки</option>
+          <option value="gel">Гель</option>
+        </select>
+      </span>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <span class="field-lbl">Количество в день</span>
+      <span class="field-box">
+        <input type="number" id="newMedDaily" min="0.1" step="0.1" value="1" inputmode="decimal">
+        <span class="field-unit" id="newMedDailyUnit">таб</span>
+      </span>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <span class="field-lbl">Цена за единицу</span>
+      <span class="field-box">
+        <input type="number" id="newMedPrice" min="0" step="0.01" inputmode="decimal">
+        <span class="field-unit" id="newMedPriceUnit">₽/таб</span>
+      </span>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <span class="field-lbl">Начальный остаток</span>
+      <span class="field-box">
+        <input type="number" id="newMedStock" min="0" step="0.01" value="0" inputmode="decimal">
+        <span class="field-unit" id="newMedStockUnit">таб</span>
+      </span>
+    </div>
+    <div class="field" style="margin-bottom:10px;">
+      <span class="field-lbl">Время приёма</span>
+      <span class="field-box">
+        <input type="time" id="newMedTime" value="08:30">
+      </span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="addMedCancel">Отмена</button>
+      <button class="btn-confirm" id="addMedOk">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: PREP ============ -->
+<div class="overlay" id="prepModal">
+  <div class="modal prep-modal">
+    <div class="prep-head">
+      <h3>Рекомендации по подготовке</h3>
+      <p>Как правильно подготовиться к каждому анализу, чтобы результаты были точными.</p>
+    </div>
+    <div class="prep-body" id="prepBody"></div>
+    <div class="prep-foot">
+      <div class="modal-actions">
+        <button class="btn-confirm" id="prepClose">Понятно</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: PIN (reset) ============ -->
+<div class="overlay" id="pinModal">
+  <div class="modal" id="pinModalBox">
+    <h3>Сброс данных</h3>
+    <p>Введи пинкод, чтобы продолжить. Все данные будут удалены безвозвратно.</p>
+    <input type="password" id="pinInput" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off">
+    <div class="err" id="pinErr">Неверный пинкод</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="pinCancel">Отмена</button>
+      <button class="btn-confirm" id="pinOk">Далее</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: CONFIRM ============ -->
+<div class="overlay" id="confirmModal">
+  <div class="modal">
+    <h3>Вы уверены?</h3>
+    <p>Мерки, вес, копилка, задачи, история лекарств и все настройки будут удалены навсегда. Это действие нельзя отменить.</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="confCancel">Отмена</button>
+      <button class="btn-danger" id="confOk">Удалить всё</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC3sj5y60bvfnwFGKAebzhdWmQAGz1Wpd8",
+  authDomain: "hrtway.firebaseapp.com",
+  projectId: "hrtway",
+  storageBucket: "hrtway.firebasestorage.app",
+  messagingSenderId: "917938012659",
+  appId: "1:917938012659:web:a6d69ed5abbd51eeb49286"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let unsubscribeSnapshot = null;
+let isSyncing = false;
+let appInitialized = false;
+let refreshApp = null;
+
+const PREFIX = 'hrt_';
+let syncTimeout = null;
+
+function debouncedSync() {
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(() => { syncToFirestore(); }, 1200);
+}
+
+const store = {
+  get(k, def) {
+    try {
+      const v = localStorage.getItem(PREFIX + k);
+      return v === null ? def : JSON.parse(v);
+    } catch(e) { return def; }
+  },
+  set(k, v) {
+    try {
+      localStorage.setItem(PREFIX + k, JSON.stringify(v));
+      debouncedSync();
+    } catch(e) {}
+  },
+  clearAll() {
+    try {
+      Object.keys(localStorage)
+        .filter(k => k.indexOf(PREFIX) === 0)
+        .forEach(k => localStorage.removeItem(k));
+      debouncedSync();
+    } catch(e) {}
+  }
+};
+
+async function loadFromFirestore(uid) {
+  try {
+    const docRef = doc(db, 'users', uid, 'data', 'main');
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const data = snap.data();
+      Object.keys(data).forEach(key => {
+        if (key !== 'updatedAt') {
+          try { localStorage.setItem(PREFIX + key, JSON.stringify(data[key])); } catch(e){}
+        }
+      });
+    }
+  } catch (error) {
+    console.error("Ошибка загрузки из Firestore:", error);
+  }
+}
+
+function subscribeFirestore(uid) {
+  if (unsubscribeSnapshot) unsubscribeSnapshot();
+  const docRef = doc(db, 'users', uid, 'data', 'main');
+  unsubscribeSnapshot = onSnapshot(docRef, (snap) => {
+    if (snap.exists() && !isSyncing && appInitialized) {
+      const data = snap.data();
+      let changed = false;
+      Object.keys(data).forEach(key => {
+        if (key !== 'updatedAt') {
+          try {
+            const current = localStorage.getItem(PREFIX + key);
+            const incoming = JSON.stringify(data[key]);
+            if (current !== incoming) {
+              localStorage.setItem(PREFIX + key, incoming);
+              changed = true;
+            }
+          } catch(e){}
+        }
+      });
+      if (changed && refreshApp) refreshApp();
+    }
+  });
+}
+
+async function syncToFirestore() {
+  if (!currentUser || isSyncing) return;
+  isSyncing = true;
+  try {
+    const docRef = doc(db, 'users', currentUser.uid, 'data', 'main');
+    const data = {};
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith(PREFIX)) {
+        const cleanKey = key.replace(PREFIX, '');
+        try { data[cleanKey] = JSON.parse(localStorage.getItem(key)); } catch(e){}
+      }
+    });
+    data.updatedAt = serverTimestamp();
+    await setDoc(docRef, data, { merge: true });
+  } catch (error) {
+    console.error("Ошибка синхронизации:", error);
+  } finally {
+    isSyncing = false;
+  }
+}
+
+const authScreen = document.getElementById('authScreen');
+const mainWrap = document.getElementById('mainWrap');
+const userEmailBadge = document.getElementById('userEmailBadge');
+
+document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+  const provider = new GoogleAuthProvider();
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    alert("Не удалось войти.\n\n" + error.message + "\n\nПроверь, что домен добавлен в Firebase → Authentication → Settings → Authorized domains.");
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  try { await signOut(auth); } catch(e){ console.error(e); }
+});
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    userEmailBadge.textContent = user.email;
+    userEmailBadge.style.display = '';
+    authScreen.classList.add('hidden');
+    mainWrap.style.display = '';
+
+    await loadFromFirestore(user.uid);
+    subscribeFirestore(user.uid);
+
+    if (!appInitialized) {
+      appInitialized = true;
+      refreshApp = initApp();
+    } else if (refreshApp) {
+      refreshApp();
+    }
+  } else {
+    currentUser = null;
+    if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
+    authScreen.classList.remove('hidden');
+    mainWrap.style.display = 'none';
+    userEmailBadge.style.display = 'none';
+  }
+});
+
+// ============================================================
+// INIT APP
+// ============================================================
+function initApp() {
+  'use strict';
+
+  var PIN_CODE = '4477';
+
+  /* ===== UTILS ===== */
+  function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
+  function plural(n, forms){
+    var n10 = Math.abs(n) % 10, n100 = Math.abs(n) % 100;
+    if (n10 === 1 && n100 !== 11) return forms[0];
+    if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return forms[1];
+    return forms[2];
+  }
+  function fmtNum(n){ return Math.round(n).toLocaleString('ru-RU'); }
+  function fmtMoney(n){
+    var r = Math.round(n * 100) / 100;
+    if (Math.abs(r - Math.round(r)) < 0.005) return fmtNum(r);
+    return r.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtQty(n){
+    if (!isFinite(n)) return '0';
+    var r = Math.round(n * 100) / 100;
+    if (Math.abs(r - Math.round(r)) < 0.005) return fmtNum(r);
+    return r.toLocaleString('ru-RU', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+  }
+  function escapeHtml(s){
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function animateNumber(el, to, dur){
+    dur = dur || 950;
+    var start = performance.now();
+    function frame(t){
+      var p = Math.min(1, (t - start) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * e);
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  function fmtDate(d){
+    var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+    return y + '-' + m + '-' + day;
+  }
+  function parseDate(s){
+    var p = String(s).split('-');
+    return new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
+  }
+  function today(){ var d = new Date(); d.setHours(0,0,0,0); return d; }
+  function dayDiff(a, b){
+    var ua = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    var ub = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    return Math.round((ub - ua) / 86400000);
+  }
+  function ymdDiff(s, e){
+    var y = e.getFullYear() - s.getFullYear();
+    var m = e.getMonth() - s.getMonth();
+    var d = e.getDate() - s.getDate();
+    if (d < 0){ m -= 1; d += new Date(e.getFullYear(), e.getMonth(), 0).getDate(); }
+    if (m < 0){ y -= 1; m += 12; }
+    return { y: y, m: m, d: d };
+  }
+  function formatWeight(w){
+    var r = Math.round(w * 100) / 100;
+    if (Math.abs(r - Math.round(r)) < 0.001) return String(Math.round(r));
+    return String(r);
+  }
+  var MONTHS_SHORT = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  var MONTHS_GEN   = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+
+  function fireConfetti(){
+    var layer = document.createElement('div');
+    layer.className = 'confetti-layer';
+    document.body.appendChild(layer);
+    var colors = ['#ff6fa5', '#ffb3d1', '#a98bff', '#7bb8ff', '#ffe066', '#ff8fab', '#c084fc'];
+    var count = 70;
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight * 0.4;
+    for (var i = 0; i < count; i++){
+      (function(i){
+        var piece = document.createElement('span');
+        var size = 6 + Math.random() * 8;
+        var color = colors[Math.floor(Math.random() * colors.length)];
+        var radius = Math.random() < 0.5 ? '50%' : (Math.random() < 0.5 ? '2px' : '1px');
+        piece.style.cssText = 'position:absolute;left:' + cx + 'px;top:' + cy + 'px;width:' + size + 'px;height:' + size + 'px;background:' + color + ';border-radius:' + radius + ';transform:translate(-50%,-50%);will-change:transform,opacity;pointer-events:none;';
+        layer.appendChild(piece);
+        var angle = Math.random() * Math.PI * 2;
+        var velocity = 180 + Math.random() * 320;
+        var dx = Math.cos(angle) * velocity;
+        var dy = Math.sin(angle) * velocity - 220;
+        var fall = 500 + Math.random() * 300;
+        var duration = 1400 + Math.random() * 700;
+        var rot = (Math.random() - 0.5) * 900;
+        piece.animate([
+          { transform: 'translate(-50%,-50%) rotate(0deg)', opacity: 1 },
+          { transform: 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px)) rotate(' + (rot/2) + 'deg)', opacity: 1, offset: 0.5 },
+          { transform: 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + (dy + fall) + 'px)) rotate(' + rot + 'deg)', opacity: 0 }
+        ], { duration: duration, easing: 'cubic-bezier(.2,.6,.4,1)', fill: 'forwards' });
+      })(i);
+    }
+    setTimeout(function(){ if (layer.parentNode) layer.parentNode.removeChild(layer); }, 2400);
+  }
+
+  /* ===== THEME ===== */
+  var themeToggle = document.getElementById('themeToggle');
+  function applyTheme(theme){
+    document.documentElement.dataset.theme = theme;
+    store.set('theme', theme);
+  }
+  function initTheme(){
+    var saved = store.get('theme', 'dark');
+    applyTheme(saved);
+  }
+  themeToggle.addEventListener('click', function(){
+    var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    if (document.startViewTransition){ document.startViewTransition(function(){ applyTheme(next); }); }
+    else { applyTheme(next); }
+  });
+  initTheme();
+
+  /* ===== 1. HRT ===== */
+  var START = new Date(2025, 11, 31, 0, 0, 0, 0);
+  function renderHRT(){
+    var now = today();
+    var days = dayDiff(START, now); if (days < 0) days = 0;
+    animateNumber(document.getElementById('daysBig'), days);
+    document.getElementById('daysUnit').textContent = plural(days, ['день','дня','дней']);
+    var weeks = Math.floor(days / 7), wRem = days % 7;
+    document.getElementById('statWeeks').textContent = weeks;
+    document.getElementById('statWeeksSub').textContent = wRem > 0 ? '+' + wRem + ' ' + plural(wRem, ['день','дня','дней']) : 'ровно';
+    var md = ymdDiff(START, now);
+    var totalMonths = md.y * 12 + md.m;
+    document.getElementById('statMonths').textContent = totalMonths;
+    document.getElementById('statMonthsSub').textContent = md.d > 0 ? '+' + md.d + ' ' + plural(md.d, ['день','дня','дней']) : 'ровно';
+    document.getElementById('statYears').textContent = md.y;
+    document.getElementById('statYearsSub').textContent = md.m > 0 ? md.m + ' ' + plural(md.m, ['месяц','месяца','месяцев']) : '—';
+    var prevMs = Math.floor(days / 100) * 100, nextMs = prevMs + 100;
+    var progress = (days - prevMs) / 100, left = nextMs - days;
+    document.getElementById('msTarget').textContent = nextMs;
+    document.getElementById('msLeft').textContent = left + ' ' + plural(left, ['день','дня','дней']);
+    document.getElementById('msFill').style.width = (progress * 100).toFixed(1) + '%';
+  }
+
+  var FACTS = [
+    'Ты начала свой путь 31 декабря 2025 — и с тех пор каждый день имеет значение.',
+    'Каждый день HRT — это тихая победа над прошлым.',
+    'Ты сильнее, чем кажется. И красивее, чем видишь в зеркале.',
+    'Твоё тело меняется — это чудо, которое ты создаёшь сама.',
+    '31 декабря ты подарила себе лучший новогодний подарок — себя настоящую.',
+    'Ты прошла путь, который многие не решаются даже начать.',
+    'Нежность к себе — тоже форма смелости.',
+    'Каждая таблетка — шаг к той, кем ты всегда была.',
+    'Ты заслуживаешь всего хорошего, что с тобой происходит.',
+    'Твоя история — это история силы и любви к себе.',
+    'Каждый день ты становишься чуть больше собой. Это бесценно.',
+    'Ты не одна. Ты — целая вселенная, которая выбрала жить.'
+  ];
+  var factsText = document.getElementById('factsText');
+  var factIndex = 0;
+  factsText.textContent = FACTS[0];
+  setInterval(function(){
+    factsText.classList.add('fade');
+    setTimeout(function(){
+      factIndex = (factIndex + 1) % FACTS.length;
+      factsText.textContent = FACTS[factIndex];
+      factsText.classList.remove('fade');
+    }, 520);
+  }, 10000);
+
+  /* ===== 2. WEIGHT ===== */
+  var weightInput = document.getElementById('weightInput');
+  var weightStatus = document.getElementById('weightStatus');
+  var weightBmi = document.getElementById('weightBmi');
+  var weightMarker = document.getElementById('weightMarker');
+  var weight = Number(store.get('weight', 53.88));
+  if (!isFinite(weight) || weight <= 0) weight = 53.88;
+  weightInput.value = formatWeight(weight);
+
+  function getHeightCm(){
+    var raw = String(store.get('m_height', '169')).replace(',', '.').replace(/[^\d.\-]/g, '');
+    var h = parseFloat(raw);
+    return isFinite(h) && h > 0 ? h : 169;
+  }
+  function bmiInfo(bmi){
+    if (bmi < 16)   return { label:'Выраженный дефицит', color:'#ff3b30' };
+    if (bmi < 18.5) return { label:'Недостаточный вес',  color:'#ff5f57' };
+    if (bmi < 20)   return { label:'Ниже нормы',         color:'#ff9f0a' };
+    if (bmi < 25)   return { label:'Здоровый вес',       color:'#12a150' };
+    if (bmi < 30)   return { label:'Выше нормы',         color:'#5b8def' };
+    if (bmi < 35)   return { label:'Ожирение I',         color:'#a855f7' };
+    return { label:'Ожирение II+', color:'#c026d3' };
+  }
+  function renderWeight(){
+    var h = getHeightCm() / 100;
+    var bmi = weight / (h * h);
+    var info = bmiInfo(bmi);
+    weightInput.style.setProperty('--weight-color', info.color);
+    weightStatus.textContent = info.label;
+    weightStatus.style.color = info.color;
+    weightBmi.textContent = 'ИМТ ' + bmi.toFixed(1);
+    weightBmi.style.color = info.color;
+    var pct = clamp((bmi - 16) / (35 - 16), 0, 1) * 100;
+    weightMarker.style.left = pct + '%';
+  }
+  function setWeight(w){
+    weight = clamp(w, 30, 200);
+    weightInput.value = formatWeight(weight);
+    store.set('weight', weight);
+    renderWeight();
+  }
+  weightInput.addEventListener('input', function(){
+    var v = parseFloat(String(weightInput.value).replace(',', '.'));
+    if (isFinite(v)){ weight = clamp(v, 30, 200); store.set('weight', weight); renderWeight(); }
+  });
+  weightInput.addEventListener('blur', function(){ weightInput.value = formatWeight(weight); });
+  document.getElementById('weightUp').addEventListener('click', function(){ setWeight(Math.round((weight + 0.1) * 100) / 100); });
+  document.getElementById('weightDown').addEventListener('click', function(){ setWeight(Math.round((weight - 0.1) * 100) / 100); });
+
+  /* ===== 3. MEDICATIONS ===== */
+  var DEFAULT_MEDS = [
+    {
+      id: 'estrogel',
+      name: 'Эстрожель',
+      form: 'gel',
+      formLabel: 'гель',
+      color: '#ff85b3',
+      unit: 'г',
+      slots: [
+        { time: '20:00', label: 'вечером', amount: 2.5 }
+      ],
+      refillDefault: 80,
+      refillLabel: 'г (флакон 80 г)',
+      defaultPrice: 1887 / 80, // ₽ per gram
+      priceUnitLabel: '₽/г',
+      defStock: 0,
+      isLiquid: true,
+      isCustom: false
+    },
+    {
+      id: 'klimen',
+      name: 'Климен',
+      form: 'tablet',
+      formLabel: 'таблетки',
+      color: '#7bb8ff',
+      unit: 'таб',
+      slots: [
+        { time: '07:00', label: 'утром', amount: 1 },
+        { time: '19:00', label: 'вечером', amount: 1 }
+      ],
+      refillDefault: 21,
+      refillLabel: 'таб (упаковка 21)',
+      defaultPrice: 1621 / 21, // ₽ per tablet
+      priceUnitLabel: '₽/таб',
+      defStock: 0,
+      isLiquid: false,
+      isCustom: false
+    }
+  ];
+  var customMeds = store.get('customMeds', []);
+  if (!Array.isArray(customMeds)) customMeds = [];
+
+  function getAllMeds(){ return DEFAULT_MEDS.concat(customMeds); }
+
+  var meds = store.get('meds', {});
+  if (!meds || typeof meds !== 'object') meds = {};
+  var stats = store.get('stats', {});
+  if (!stats || typeof stats !== 'object') stats = {};
+  var prices = store.get('prices', {});
+  if (!prices || typeof prices !== 'object') prices = {};
+
+  function saveMeds(){
+    store.set('meds', meds);
+    store.set('stats', stats);
+    store.set('prices', prices);
+    store.set('customMeds', customMeds);
+  }
+
+  function ensureMedsInitialized(){
+    var all = getAllMeds();
+    var changed = false;
+    all.forEach(function(m){
+      if (typeof meds[m.id] === 'undefined') {
+        meds[m.id] = m.defStock;
+        stats[m.id] = 0;
+        changed = true;
+      }
+      if (typeof stats[m.id] === 'undefined') { stats[m.id] = 0; changed = true; }
+      if (typeof prices[m.id] !== 'number') { prices[m.id] = m.defaultPrice; changed = true; }
+    });
+    // Remove old ids not in list
+    Object.keys(meds).forEach(function(id){
+      var exists = all.some(function(m){ return m.id === id; });
+      if (!exists) { delete meds[id]; delete stats[id]; changed = true; }
+    });
+    Object.keys(prices).forEach(function(id){
+      var exists = all.some(function(m){ return m.id === id; });
+      if (!exists) { delete prices[id]; changed = true; }
+    });
+    if (changed) saveMeds();
+  }
+  ensureMedsInitialized();
+
+  function dailyTotal(m){
+    return m.slots.reduce(function(s, slot){ return s + slot.amount; }, 0);
+  }
+
+  function runAutoDeduction(){
+    var now = new Date();
+    var todayStr = fmtDate(now);
+    var yesterday = new Date(now); yesterday.setDate(yesterday.getDate() - 1);
+    var yesterdayStr = fmtDate(yesterday);
+    var changed = false;
+
+    getAllMeds().forEach(function(m){
+      m.slots.forEach(function(slot, slotIdx){
+        var key = 'lastDeduct_' + m.id + '_' + slotIdx;
+        var parts = String(slot.time).split(':');
+        var slotDate = new Date(now);
+        slotDate.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+        var targetDay = (now >= slotDate) ? todayStr : yesterdayStr;
+
+        var lastDeduct = store.get(key, null);
+        if (!lastDeduct) {
+          lastDeduct = (now >= slotDate) ? todayStr : yesterdayStr;
+          store.set(key, lastDeduct);
+        }
+
+        if (targetDay > lastDeduct) {
+          var missed = dayDiff(parseDate(lastDeduct), parseDate(targetDay));
+          if (missed > 0) {
+            var need = missed * slot.amount;
+            var have = Math.max(0, Number(meds[m.id]) || 0);
+            var actual = Math.min(have, need);
+            meds[m.id] = have - actual;
+            stats[m.id] = (Number(stats[m.id]) || 0) + actual;
+            store.set(key, targetDay);
+            changed = true;
+          }
+        }
+      });
+    });
+
+    if (changed) {
+      saveMeds();
+      renderMeds();
+      renderStats();
+    }
+  }
+
+  function supplyColor(days){
+    var pct = clamp(days / 30, 0, 1);
+    pct = 1 - Math.pow(1 - pct, 0.75);
+    var hue = pct * 145;
+    return 'hsl(' + hue.toFixed(1) + ', 72%, 46%)';
+  }
+
+  function renderMeds(){
+    var root = document.getElementById('medsRoot');
+    root.innerHTML = '';
+    getAllMeds().forEach(function(m){
+      var stock = Math.max(0, Number(meds[m.id]) || 0);
+      var dTotal = dailyTotal(m);
+      var daysFloat = dTotal > 0 ? stock / dTotal : 0;
+      var daysWhole = Math.floor(daysFloat);
+      var pct = clamp(daysFloat / 30, 0, 1) * 100;
+      var color = supplyColor(daysFloat);
+      var daysText;
+      if (stock === 0) daysText = 'Нет в наличии';
+      else if (daysWhole < 1) daysText = '< 1 дня';
+      else daysText = daysWhole + ' ' + plural(daysWhole, ['день','дня','дней']);
+
+      var stockDisplay = m.isLiquid
+        ? fmtQty(stock) + ' ' + m.unit
+        : fmtNum(stock) + ' ' + m.unit;
+
+      var dailyDisplay = m.isLiquid
+        ? fmtQty(dTotal) + ' ' + m.unit + '/день'
+        : fmtNum(dTotal) + ' ' + m.unit + '/день';
+
+      var slotsStr = m.slots.map(function(s){ return s.time; }).join(' · ');
+
+      var barHtml = m.isLiquid
+        ? '<div class="bar-fill liquid" style="width:' + pct.toFixed(1) + '%"></div>'
+        : '<div class="bar-fill" style="width:' + pct.toFixed(1) + '%; background:' + color + '"></div>';
+
+      var row = document.createElement('div');
+      row.className = 'med-row';
+      row.innerHTML =
+        '<div class="med-head">' +
+          '<div class="med-name">' +
+            '<span class="med-dot" style="background:' + m.color + '"></span>' +
+            escapeHtml(m.name) +
+            ' <span class="med-sub">' + escapeHtml(m.formLabel) + '</span>' +
+          '</div>' +
+          '<div class="med-right">' +
+            '<span class="med-days" style="color:' + color + '">' + daysText + '</span>' +
+            '<button type="button" class="med-add" data-med="' + m.id + '" aria-label="Пополнить ' + escapeHtml(m.name) + '">+</button>' +
+            '<button type="button" class="med-edit" data-edit-med="' + m.id + '" aria-label="Изменить остаток ' + escapeHtml(m.name) + '">' +
+              '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>' +
+            '</button>' +
+            (m.isCustom ? '<button type="button" class="med-del" data-del-med="' + m.id + '" aria-label="Удалить"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="med-meta">' +
+          '<span>' + dailyDisplay + ' · ' + slotsStr + '</span>' +
+          '<span>' + stockDisplay + '</span>' +
+        '</div>' +
+        '<div class="bar">' + barHtml + '</div>';
+      root.appendChild(row);
+    });
+  }
+
+  function renderStats(){
+    var grid = document.getElementById('statsGrid');
+    if (!grid) return;
+    var html = '';
+    getAllMeds().forEach(function(m){
+      var v = Math.max(0, Number(stats[m.id]) || 0);
+      var display = m.isLiquid ? fmtQty(v) + ' ' + m.unit : fmtNum(v);
+      html += '<div class="stat">' +
+        '<div class="stat-val" style="color:' + m.color + '">' + display + '</div>' +
+        '<div class="stat-lbl">' + escapeHtml(m.name) + '</div>' +
+        '<div class="stat-sub">принято</div>' +
+      '</div>';
+    });
+    grid.innerHTML = html;
+
+    // statsSince — earliest "start" from statsStart (or today)
+    var start = store.get('statsStart', null);
+    if (!start){ start = fmtDate(today()); store.set('statsStart', start); }
+    var d = parseDate(start);
+    var sinceEl = document.getElementById('statsSince');
+    if (sinceEl) {
+      sinceEl.textContent = 'с ' + d.getDate() + ' ' + MONTHS_GEN[d.getMonth()] + ' ' + d.getFullYear();
+    }
+  }
+
+  /* ===== REFILL MODAL ===== */
+  var refillModal = document.getElementById('refillModal');
+  var refillModalBox = document.getElementById('refillModalBox');
+  var refillGrid = document.getElementById('refillGrid');
+
+  function buildRefillInputs(focusMedId){
+    refillGrid.innerHTML = '';
+    getAllMeds().forEach(function(m){
+      var prefill = (m.id === focusMedId) ? m.refillDefault : '';
+      var step = m.isLiquid ? '0.1' : '1';
+      var label = document.createElement('label');
+      label.className = 'refill-field';
+      label.innerHTML =
+        '<span class="refill-dot" style="background:' + m.color + '"></span>' +
+        '<span class="refill-name">' + escapeHtml(m.name) + '</span>' +
+        '<span class="field-box">' +
+          '<input type="number" data-med-input="' + m.id + '" min="0" step="' + step + '" inputmode="decimal" placeholder="0" value="' + prefill + '">' +
+          '<span class="field-unit">' + escapeHtml(m.unit) + '</span>' +
+        '</span>';
+      refillGrid.appendChild(label);
+    });
+  }
+
+  function openRefillModal(focusMedId){
+    buildRefillInputs(focusMedId);
+    refillModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){
+      var inp = refillGrid.querySelector('[data-med-input="' + focusMedId + '"]');
+      if (inp) try{ inp.focus(); inp.select(); }catch(e){}
+    }, 220);
+  }
+  function closeRefillModal(){
+    refillModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('medsRoot').addEventListener('click', function(e){
+    var addBtn = e.target.closest ? e.target.closest('.med-add') : null;
+    if (addBtn){ openRefillModal(addBtn.dataset.med); return; }
+    var editBtn = e.target.closest ? e.target.closest('.med-edit') : null;
+    if (editBtn){ openEditStockModal(editBtn.dataset.editMed); return; }
+    var delBtn = e.target.closest ? e.target.closest('.med-del') : null;
+    if (delBtn){ deleteCustomMed(delBtn.dataset.delMed); }
+  });
+
+  document.getElementById('refillCancel').addEventListener('click', closeRefillModal);
+
+  document.getElementById('refillOk').addEventListener('click', function(){
+    var inputs = refillGrid.querySelectorAll('[data-med-input]');
+    var any = false;
+    inputs.forEach(function(inp){
+      var v = parseFloat(String(inp.value).replace(',', '.'));
+      if (isFinite(v) && v > 0){
+        var id = inp.dataset.medInput;
+        meds[id] = Math.max(0, Number(meds[id]) || 0) + v;
+        any = true;
+      }
+    });
+    if (!any){
+      refillModalBox.classList.remove('shake');
+      void refillModalBox.offsetWidth;
+      refillModalBox.classList.add('shake');
+      return;
+    }
+    saveMeds();
+    renderMeds();
+    closeRefillModal();
+  });
+
+  /* ===== EDIT STOCK MODAL ===== */
+  var editStockModal = document.getElementById('editStockModal');
+  var editStockModalBox = document.getElementById('editStockModalBox');
+  var editStockInput = document.getElementById('editStockInput');
+  var editStockUnit = document.getElementById('editStockUnit');
+  var editStockLabel = document.getElementById('editStockLabel');
+  var editStockDesc = document.getElementById('editStockDesc');
+  var editStockMedId = null;
+
+  function openEditStockModal(medId){
+    var m = getAllMeds().find(function(x){ return x.id === medId; });
+    if (!m) return;
+    editStockMedId = medId;
+    var cur = Math.max(0, Number(meds[medId]) || 0);
+    editStockInput.value = m.isLiquid ? (Math.round(cur * 100) / 100) : Math.round(cur);
+    editStockInput.step = m.isLiquid ? '0.1' : '1';
+    editStockUnit.textContent = m.unit;
+    editStockLabel.textContent = 'Остаток «' + m.name + '»';
+    editStockDesc.textContent = 'Введи фактическое количество — оно заменит текущий остаток.';
+    editStockModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ try{ editStockInput.focus(); editStockInput.select(); }catch(e){} }, 220);
+  }
+  function closeEditStockModal(){
+    editStockModal.classList.remove('open');
+    document.body.style.overflow = '';
+    editStockMedId = null;
+  }
+
+  document.getElementById('editStockCancel').addEventListener('click', closeEditStockModal);
+  document.getElementById('editStockOk').addEventListener('click', function(){
+    if (!editStockMedId) return;
+    var v = parseFloat(String(editStockInput.value).replace(',', '.'));
+    if (!isFinite(v) || v < 0){
+      editStockModalBox.classList.remove('shake');
+      void editStockModalBox.offsetWidth;
+      editStockModalBox.classList.add('shake');
+      return;
+    }
+    meds[editStockMedId] = v;
+    saveMeds();
+    renderMeds();
+    closeEditStockModal();
+  });
+
+  /* ===== DELETE CUSTOM MED ===== */
+  function deleteCustomMed(medId){
+    if (!confirm('Удалить этот препарат?')) return;
+    customMeds = customMeds.filter(function(m){ return m.id !== medId; });
+    delete meds[medId];
+    delete stats[medId];
+    delete prices[medId];
+    saveMeds();
+    renderMeds();
+    renderStats();
+    renderExpenses();
+  }
+
+  /* ===== ADD MED MODAL ===== */
+  var addMedModal = document.getElementById('addMedModal');
+  var addMedModalBox = document.getElementById('addMedModalBox');
+  var newMedForm = document.getElementById('newMedForm');
+  var newMedDailyUnit = document.getElementById('newMedDailyUnit');
+  var newMedPriceUnit = document.getElementById('newMedPriceUnit');
+  var newMedStockUnit = document.getElementById('newMedStockUnit');
+
+  function updateAddMedUnits(){
+    var form = newMedForm.value;
+    if (form === 'gel'){
+      newMedDailyUnit.textContent = 'г';
+      newMedPriceUnit.textContent = '₽/г';
+      newMedStockUnit.textContent = 'г';
+    } else {
+      newMedDailyUnit.textContent = 'таб';
+      newMedPriceUnit.textContent = '₽/таб';
+      newMedStockUnit.textContent = 'таб';
+    }
+  }
+  newMedForm.addEventListener('change', updateAddMedUnits);
+  updateAddMedUnits();
+
+  document.getElementById('addMedBtn').addEventListener('click', function(){
+    document.getElementById('newMedName').value = '';
+    newMedForm.value = 'tablet';
+    document.getElementById('newMedDaily').value = 1;
+    document.getElementById('newMedPrice').value = '';
+    document.getElementById('newMedStock').value = 0;
+    document.getElementById('newMedTime').value = '08:30';
+    updateAddMedUnits();
+    addMedModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ try{ document.getElementById('newMedName').focus(); }catch(e){} }, 220);
+  });
+  document.getElementById('addMedCancel').addEventListener('click', function(){
+    addMedModal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  document.getElementById('addMedOk').addEventListener('click', function(){
+    var name = String(document.getElementById('newMedName').value || '').trim();
+    var form = newMedForm.value;
+    var daily = parseFloat(String(document.getElementById('newMedDaily').value).replace(',', '.'));
+    var price = parseFloat(String(document.getElementById('newMedPrice').value).replace(',', '.'));
+    var stock = parseFloat(String(document.getElementById('newMedStock').value).replace(',', '.'));
+    var time = String(document.getElementById('newMedTime').value || '08:30').trim();
+
+    if (!name || !isFinite(daily) || daily <= 0 || !isFinite(price) || price < 0){
+      addMedModalBox.classList.remove('shake');
+      void addMedModalBox.offsetWidth;
+      addMedModalBox.classList.add('shake');
+      return;
+    }
+    if (!isFinite(stock) || stock < 0) stock = 0;
+
+    var colors = ['#ff6fa5', '#e8b200', '#7bb8ff', '#a98bff', '#34d17d', '#ff9f0a', '#5b8def', '#c084fc'];
+    var color = colors[customMeds.length % colors.length];
+    var id = 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+
+    var newMed = {
+      id: id,
+      name: name,
+      form: form,
+      formLabel: form === 'tablet' ? 'таблетки' : 'гель',
+      color: color,
+      unit: form === 'tablet' ? 'таб' : 'г',
+      slots: [{ time: time, label: '', amount: daily }],
+      refillDefault: form === 'tablet' ? 30 : 80,
+      refillLabel: form === 'tablet' ? 'таб' : 'г',
+      defaultPrice: price,
+      priceUnitLabel: form === 'tablet' ? '₽/таб' : '₽/г',
+      defStock: 0,
+      isLiquid: form === 'gel',
+      isCustom: true
+    };
+
+    customMeds.push(newMed);
+    meds[id] = Math.max(0, stock);
+    stats[id] = 0;
+    prices[id] = price;
+    store.set('lastDeduct_' + id + '_0', fmtDate(today()));
+    saveMeds();
+    renderMeds();
+    renderStats();
+    renderExpenses();
+    addMedModal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  /* ===== EPILATION ===== */
+  var EPIL_DEFAULT_INTERVAL = 45;
+  var epilLast = store.get('epil_last', null);
+  if (!epilLast){
+    epilLast = fmtDate(today());
+    store.set('epil_last', epilLast);
+  }
+  var epilInterval = Math.max(1, Math.round(Number(store.get('epil_interval', EPIL_DEFAULT_INTERVAL)) || EPIL_DEFAULT_INTERVAL));
+
+  var epilZones = store.get('epilZones', []);
+  if (!Array.isArray(epilZones)) epilZones = [];
+
+  function shortDateRu(iso){
+    var d = parseDate(iso);
+    return d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
+  }
+
+  function renderEpil(){
+    var last = parseDate(epilLast);
+    var next = new Date(last);
+    next.setDate(next.getDate() + epilInterval);
+    var now = today();
+    var elapsed = dayDiff(last, now);
+    var daysLeft = dayDiff(now, next);
+
+    var overdue = daysLeft < 0;
+    var displayNum, displayUnit;
+    if (overdue){
+      displayNum = Math.abs(daysLeft);
+      displayUnit = plural(displayNum, ['день','дня','дней']) + ' просрочено';
+    } else if (daysLeft === 0){
+      displayNum = 0;
+      displayUnit = 'дней — сегодня';
+    } else {
+      displayNum = daysLeft;
+      displayUnit = plural(displayNum, ['день','дня','дней']) + ' до следующей';
+    }
+    animateNumber(document.getElementById('epilDaysBig'), displayNum);
+    document.getElementById('epilDaysUnit').textContent = displayUnit;
+    document.getElementById('epilDaysBig').classList.toggle('overdue', overdue);
+    document.getElementById('epilFill').classList.toggle('overdue', overdue);
+
+    var pct = clamp(elapsed / epilInterval, 0, 1) * 100;
+    document.getElementById('epilFill').style.width = pct.toFixed(1) + '%';
+    document.getElementById('epilMarker').style.left = pct.toFixed(1) + '%';
+
+    document.getElementById('epilLast').textContent = shortDateRu(epilLast);
+    document.getElementById('epilNext').textContent = shortDateRu(fmtDate(next));
+    document.getElementById('epilMidLabel').textContent = 'интервал ' + epilInterval + ' ' + plural(epilInterval, ['день','дня','дней']);
+
+    var epilBadge = document.getElementById('epilBadge');
+    if (overdue){
+      epilBadge.textContent = 'просрочено';
+      epilBadge.style.color = 'var(--danger)';
+      epilBadge.style.borderColor = 'rgba(255,59,48,.35)';
+      epilBadge.style.background = 'rgba(255,59,48,.08)';
+    } else if (daysLeft <= 7){
+      epilBadge.textContent = 'скоро · через ' + daysLeft + ' ' + plural(daysLeft, ['день','дня','дней']);
+      epilBadge.style.color = 'var(--amber)';
+      epilBadge.style.borderColor = 'rgba(255,159,10,.4)';
+      epilBadge.style.background = 'rgba(255,159,10,.08)';
+    } else {
+      epilBadge.textContent = 'через ' + daysLeft + ' ' + plural(daysLeft, ['день','дня','дней']);
+      epilBadge.style.color = '';
+      epilBadge.style.borderColor = '';
+      epilBadge.style.background = '';
+    }
+  }
+
+  var epilModal = document.getElementById('epilModal');
+  var epilModalBox = document.getElementById('epilModalBox');
+  var epilDateInput = document.getElementById('epilDateInput');
+  var epilIntervalInput = document.getElementById('epilIntervalInput');
+
+  function openEpilModal(){
+    epilDateInput.value = epilLast;
+    epilIntervalInput.value = epilInterval;
+    epilModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ try{ epilIntervalInput.focus(); }catch(e){} }, 220);
+  }
+  function closeEpilModal(){
+    epilModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('epilSettingsBtn').addEventListener('click', openEpilModal);
+  document.getElementById('epilBadge').addEventListener('click', openEpilModal);
+  document.getElementById('epilCancel').addEventListener('click', closeEpilModal);
+  document.querySelectorAll('[data-epil-days]').forEach(function(btn){
+    btn.addEventListener('click', function(){ epilIntervalInput.value = btn.dataset.epilDays; });
+  });
+  document.getElementById('epilOk').addEventListener('click', function(){
+    var dv = String(epilDateInput.value || '').trim();
+    var iv = parseInt(epilIntervalInput.value, 10);
+    if (!dv || !/^\d{4}-\d{2}-\d{2}$/.test(dv) || !isFinite(iv) || iv < 1){
+      epilModalBox.classList.remove('shake');
+      void epilModalBox.offsetWidth;
+      epilModalBox.classList.add('shake');
+      return;
+    }
+    epilLast = dv;
+    epilInterval = clamp(iv, 1, 365);
+    store.set('epil_last', epilLast);
+    store.set('epil_interval', epilInterval);
+    renderEpil();
+    closeEpilModal();
+  });
+
+  /* ===== EPILATION ZONES ===== */
+  function renderEpilZones(){
+    var root = document.getElementById('epilZonesRoot');
+    if (!epilZones.length){
+      root.innerHTML = '<div class="epil-empty">Пока нет зон — добавь первую зону эпиляции</div>';
+      return;
+    }
+    root.innerHTML = '';
+    epilZones.forEach(function(z){
+      var done = z.sessions >= z.total;
+      var blockCount = Math.max(z.total, z.sessions);
+      var item = document.createElement('div');
+      item.className = 'epil-zone-item' + (done ? ' done' : '');
+      var blocks = '';
+      for (var i = 0; i < blockCount; i++){
+        blocks += '<div class="epil-block' + (i < z.sessions ? ' filled' : '') + '"></div>';
+      }
+      var sessionsLabel = z.sessions > z.total
+        ? z.sessions + ' / ' + z.total + ' ✓'
+        : z.sessions + ' / ' + z.total;
+      item.innerHTML =
+        '<div class="epil-zone-top">' +
+          '<button class="epil-zone-check' + (done ? ' done' : '') + '" data-zone-toggle="' + z.id + '" aria-label="' + (done ? 'Отменить завершение' : 'Отметить завершённой') + '"><svg viewBox="0 0 24 24"><path d="M4.5 12.8l5 5L19.5 6.6"/></svg></button>' +
+          '<span class="epil-zone-name">' + escapeHtml(z.name) + '</span>' +
+          '<span class="epil-zone-sessions">' + sessionsLabel + '</span>' +
+          '<button class="epil-zone-del" data-zone-del="' + z.id + '" aria-label="Удалить зону"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+        '</div>' +
+        '<div class="epil-zone-blocks">' + blocks + '</div>' +
+        '<div style="display:flex;gap:8px;">' +
+          '<button class="epil-zone-mark" data-zone-mark="' + z.id + '">✓ Отметить сеанс</button>' +
+          (z.sessions > 0 ? '<button class="epil-zone-mark" data-zone-minus="' + z.id + '">− Убрать сеанс</button>' : '') +
+        '</div>';
+      root.appendChild(item);
+    });
+  }
+
+  var epilZoneModal = document.getElementById('epilZoneModal');
+  var epilZoneModalBox = document.getElementById('epilZoneModalBox');
+  var epilZoneNameInput = document.getElementById('epilZoneNameInput');
+  var epilZoneTotalInput = document.getElementById('epilZoneTotalInput');
+
+  document.getElementById('addEpilZoneBtn').addEventListener('click', function(){
+    epilZoneNameInput.value = '';
+    epilZoneTotalInput.value = 10;
+    epilZoneModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ try{ epilZoneNameInput.focus(); }catch(e){} }, 220);
+  });
+  document.getElementById('epilZoneCancel').addEventListener('click', function(){
+    epilZoneModal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  document.getElementById('epilZoneOk').addEventListener('click', function(){
+    var name = String(epilZoneNameInput.value || '').trim();
+    var total = parseInt(epilZoneTotalInput.value, 10);
+    if (!name || !isFinite(total) || total < 1 || total > 50){
+      epilZoneModalBox.classList.remove('shake');
+      void epilZoneModalBox.offsetWidth;
+      epilZoneModalBox.classList.add('shake');
+      return;
+    }
+    epilZones.push({
+      id: 'z_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      name: name,
+      total: total,
+      sessions: 0,
+      createdAt: Date.now()
+    });
+    store.set('epilZones', epilZones);
+    renderEpilZones();
+    epilZoneModal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  document.getElementById('epilZonesRoot').addEventListener('click', function(e){
+    var markBtn = e.target.closest ? e.target.closest('[data-zone-mark]') : null;
+    var minusBtn = e.target.closest ? e.target.closest('[data-zone-minus]') : null;
+    var delBtn = e.target.closest ? e.target.closest('[data-zone-del]') : null;
+    var toggleBtn = e.target.closest ? e.target.closest('[data-zone-toggle]') : null;
+
+    if (markBtn){
+      var z1 = epilZones.find(function(x){ return x.id === markBtn.dataset.zoneMark; });
+      if (z1){
+        z1.sessions++;
+        if (z1.sessions === z1.total) fireConfetti();
+        store.set('epilZones', epilZones);
+        renderEpilZones();
+      }
+    } else if (minusBtn){
+      var z2 = epilZones.find(function(x){ return x.id === minusBtn.dataset.zoneMinus; });
+      if (z2 && z2.sessions > 0){
+        z2.sessions--;
+        store.set('epilZones', epilZones);
+        renderEpilZones();
+      }
+    } else if (delBtn){
+      if (!confirm('Удалить эту зону?')) return;
+      epilZones = epilZones.filter(function(x){ return x.id !== delBtn.dataset.zoneDel; });
+      store.set('epilZones', epilZones);
+      renderEpilZones();
+    } else if (toggleBtn){
+      var z3 = epilZones.find(function(x){ return x.id === toggleBtn.dataset.zoneToggle; });
+      if (z3){
+        if (z3.sessions >= z3.total) { z3.sessions = 0; }
+        else { z3.sessions = z3.total; fireConfetti(); }
+        store.set('epilZones', epilZones);
+        renderEpilZones();
+      }
+    }
+  });
+
+  /* ===== EXPENSES ===== */
+  var expToggle = document.getElementById('expToggle');
+  var expContent = document.getElementById('expContent');
+  var expToggleLabel = document.getElementById('expToggleLabel');
+  var expMonthly = document.getElementById('expMonthly');
+  var expYearly = document.getElementById('expYearly');
+  var expBreakdown = document.getElementById('expBreakdown');
+  var DAYS_PER_MONTH = 30;
+
+  function computeExpenses(){
+    var rows = [];
+    var total = 0;
+    getAllMeds().forEach(function(m){
+      var price = Number(prices[m.id]);
+      if (!isFinite(price) || price < 0) price = m.defaultPrice;
+      var dTotal = dailyTotal(m);
+      var monthly = price * dTotal * DAYS_PER_MONTH;
+      total += monthly;
+      rows.push({ m: m, price: price, monthly: monthly, daily: dTotal });
+    });
+    return { total: total, rows: rows };
+  }
+
+  function renderExpenses(){
+    var exp = computeExpenses();
+    expMonthly.textContent = fmtNum(exp.total) + ' ₽';
+    expYearly.textContent = fmtNum(exp.total * 12) + ' ₽';
+    var html = '';
+    exp.rows.forEach(function(r){
+      var m = r.m;
+      var dailyStr = m.isLiquid ? fmtQty(r.daily) + ' ' + m.unit : fmtNum(r.daily) + ' ' + m.unit;
+      var priceStr = fmtMoney(r.price) + ' ' + m.priceUnitLabel;
+      html +=
+        '<div class="expense-row">' +
+          '<div class="expense-left">' +
+            '<span class="expense-dot" style="background:' + m.color + '"></span>' +
+            '<div class="expense-text">' +
+              '<div class="expense-name">' + escapeHtml(m.name) + '</div>' +
+              '<div class="expense-details">' + dailyStr + '/день · ' + priceStr + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="expense-cost">' + fmtNum(r.monthly) + ' ₽</div>' +
+        '</div>';
+    });
+    expBreakdown.innerHTML = html;
+  }
+
+  expToggle.addEventListener('click', function(){
+    var open = expContent.classList.toggle('open');
+    expToggle.classList.toggle('open', open);
+    expToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    expToggleLabel.textContent = open ? 'Свернуть' : 'Подробнее';
+  });
+
+  /* ===== PRICE EDIT MODAL ===== */
+  var priceModal = document.getElementById('priceModal');
+  var priceModalBox = document.getElementById('priceModalBox');
+  var priceGrid = document.getElementById('priceGrid');
+
+  function buildPriceInputs(){
+    priceGrid.innerHTML = '';
+    getAllMeds().forEach(function(m){
+      var current = Number(prices[m.id]);
+      if (!isFinite(current) || current < 0) current = m.defaultPrice;
+      var label = document.createElement('label');
+      label.className = 'refill-field';
+      label.innerHTML =
+        '<span class="refill-dot" style="background:' + m.color + '"></span>' +
+        '<span class="refill-name">' + escapeHtml(m.name) + '</span>' +
+        '<span class="field-box">' +
+          '<input type="number" data-price-input="' + m.id + '" min="0" step="0.01" inputmode="decimal" value="' + (Math.round(current * 100) / 100) + '">' +
+          '<span class="field-unit">' + escapeHtml(m.priceUnitLabel) + '</span>' +
+        '</span>';
+      priceGrid.appendChild(label);
+    });
+  }
+
+  document.getElementById('priceEditBtn').addEventListener('click', function(){
+    buildPriceInputs();
+    priceModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  document.getElementById('priceCancel').addEventListener('click', function(){
+    priceModal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  document.getElementById('priceOk').addEventListener('click', function(){
+    var inputs = priceGrid.querySelectorAll('[data-price-input]');
+    var any = false;
+    inputs.forEach(function(inp){
+      var v = parseFloat(String(inp.value).replace(',', '.'));
+      if (isFinite(v) && v >= 0){
+        prices[inp.dataset.priceInput] = v;
+        any = true;
+      }
+    });
+    if (!any){
+      priceModalBox.classList.remove('shake');
+      void priceModalBox.offsetWidth;
+      priceModalBox.classList.add('shake');
+      return;
+    }
+    saveMeds();
+    renderExpenses();
+    priceModal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  /* ===== 4. ANALYSES ===== */
+  var ANALYS_INTERVAL = { short: 90, long: 180, uzi: 365 };
+
+  var ANALYS_CATEGORIES = [
+    { id: 'short', title: 'Раз в 3 месяца · гормоны', emoji: '🔄',
+      tags: [ { name: 'ФСГ' }, { name: 'ЛГ' }, { name: 'Эстрадиол' }, { name: 'Тестостерон общий' } ] },
+    { id: 'long', title: 'Раз в 6 месяцев · кровь и моча', emoji: '📅',
+      tags: [
+        { name: 'Пролактин' }, { name: 'АЛТ' }, { name: 'АСТ' }, { name: 'Билирубин общий' },
+        { name: 'ОАК развёрнутый', never: true }, { name: 'Коагулограмма', never: true },
+        { name: 'Ферритин', never: true },
+        { name: 'Липидограмма (общий холестерин, ЛПВП, ЛПНП, ТГ)', never: true },
+        { name: 'БАК (креатинин, мочевая кислота, натрий, калий, кальций, альбумин)', never: true },
+        { name: 'ПСА общий', never: true }, { name: 'ОАМ', never: true }
+      ] },
+    { id: 'uzi', title: 'УЗИ · раз в год', emoji: '🩻',
+      tags: [ { name: 'УЗИ почек', never: true }, { name: 'УЗИ сосудов шеи', never: true }, { name: 'УЗИ грудных желёз', never: true } ] }
+  ];
+
+  var DEFAULT_ANALYS_STATE = {
+    short: { lastDate: '2026-07-26', nextDate: '2026-10-26', neverCleared: false, userMarked: false },
+    long:  { lastDate: '2026-07-26', nextDate: '2027-01-26', neverCleared: false, userMarked: false },
+    uzi:   { lastDate: null,          nextDate: '2026-12-26', neverCleared: false, userMarked: false }
+  };
+
+  var analysState = store.get('analysState', null);
+  if (!analysState || typeof analysState !== 'object'){
+    analysState = JSON.parse(JSON.stringify(DEFAULT_ANALYS_STATE));
+    store.set('analysState', analysState);
+  } else {
+    var analysModified = false;
+    Object.keys(DEFAULT_ANALYS_STATE).forEach(function(k){
+      if (!analysState[k]) { analysState[k] = JSON.parse(JSON.stringify(DEFAULT_ANALYS_STATE[k])); analysModified = true; }
+      if (typeof analysState[k].userMarked === 'undefined') { analysState[k].userMarked = false; analysModified = true; }
+    });
+    if (analysModified) store.set('analysState', analysState);
+  }
+
+  var PREP_SECTIONS = [
+    { title: '⚡ Срочно · ты это ещё не сдавала', urgent: true, items: [
+      'ОАК развёрнутый + коагулограмма + ферритин — никогда не сдавала.',
+      'Липидограмма (общий холестерин, ЛПВП, ЛПНП, ТГ) — никогда.',
+      'БАК полностью: креатинин, мочевая кислота, натрий, калий, кальций, альбумин — никогда.',
+      'ПСА общий — никогда.',
+      'Общий анализ мочи (ОАМ) — никогда.',
+      'УЗИ почек, УЗИ сосудов шеи, УЗИ грудных желёз — никогда.',
+      'Всё это важно сдать в ближайшие месяцы, до приёма эндокринолога 26.12.2026.'
+    ] },
+    { title: 'Общие правила для всех анализов', items: [
+      'Сдавать утром, строго натощак — 8–12 часов без еды.',
+      'Пить можно только воду, без газа и сахара.',
+      'За 24 часа исключить алкоголь и жирную пищу.',
+      'Сообщить лаборатории о принимаемых препаратах.',
+      'Гормональные препараты принимать как обычно, если врач не назначил иначе.'
+    ] },
+    { title: 'Гормоны · ФСГ, ЛГ, эстрадиол, тестостерон, пролактин', items: [
+      'Сдавать утром, до 10:00, натощак.',
+      'За 24 часа исключить секс, стресс и интенсивные физические нагрузки.',
+      'Перед сдачей пролактина — 15–20 минут посидеть спокойно в лаборатории.',
+      'Указать в комментарии время последней дозы эстрогена / антиандрогена.'
+    ] },
+    { title: 'Кровь · ОАК, коагулограмма, БАК, липидограмма, ферритин', items: [
+      'Строго натощак, 12–14 часов голода.',
+      'За 3 дня исключить жирную и жареную пищу.',
+      'За 48 часов исключить алкоголь.',
+      'Не сдавать сразу после болезни, операции или высокой температуры.',
+      'Липидограмму не сдавать сразу после резкого изменения веса.',
+      'Коагулограмму сдавать до приёма гормонов, если иначе не назначил врач.'
+    ] },
+    { title: 'ПСА общий', items: [
+      'За 2 недели исключить массаж простаты, ректальное исследование и УЗИ простаты.',
+      'За 48 часов исключить секс и эякуляцию.',
+      'За 48 часов исключить интенсивные велосипедные нагрузки.'
+    ] },
+    { title: 'Общий анализ мочи (ОАМ)', items: [
+      'Собрать первую утреннюю мочу — она самая информативная.',
+      'Перед сбором сделать туалет наружных половых органов.',
+      'Собирать среднюю порцию мочи в стерильный контейнер.',
+      'Доставить в лабораторию в течение 2 часов.'
+    ] },
+    { title: 'УЗИ почек', items: [
+      'Желательно натощак.',
+      'За 3 дня исключить газообразующие продукты: бобовые, капусту, газировку, свежий хлеб.',
+      'Прийти с полным мочевым пузырём — выпить 1–1,5 л воды за час до исследования.'
+    ] },
+    { title: 'УЗИ сосудов шеи', items: [
+      'Специальной подготовки не требуется.',
+      'За 2 часа до исследования не курить и не пить кофе или крепкий чай.',
+      'Прийти в удобной одежде с открытой шеей.'
+    ] },
+    { title: 'УЗИ грудных желёз', items: [
+      'Проводить в 5–12 день менструального цикла, если он есть.',
+      'За 3 дня исключить кофеин.',
+      'В день исследования не использовать дезодоранты и кремы в области подмышек и груди.',
+      'Сообщить врачу о принимаемых гормонах и их дозировке.'
+    ] }
+  ];
+
+  function analysStatusColor(daysLeft){
+    if (daysLeft < 0) return 'red';
+    if (daysLeft <= 7) return 'red';
+    if (daysLeft <= 30) return 'yellow';
+    return 'green';
+  }
+  function analysStatusLabel(daysLeft){
+    if (daysLeft < 0){
+      var overdue = Math.abs(daysLeft);
+      return 'Просрочено на ' + overdue + ' ' + plural(overdue, ['день','дня','дней']);
+    }
+    if (daysLeft === 0) return 'Сегодня последний день';
+    return 'Осталось ' + daysLeft + ' ' + plural(daysLeft, ['день','дня','дней']);
+  }
+  function shortDate(iso){
+    var d = parseDate(iso);
+    return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
+  }
+
+  function renderAnalys(){
+    var root = document.getElementById('analysRoot');
+    if (!root) return;
+    root.innerHTML = '';
+    var now = today();
+
+    ANALYS_CATEGORIES.forEach(function(cat){
+      var st = analysState[cat.id];
+      var catHasNever = cat.tags.some(function(t){ return typeof t === 'object' && t.never; });
+      var showNever = catHasNever && !st.neverCleared;
+
+      var userMarked = !!st.userMarked;
+      var pct, badgeClass, badgeLabel, lastLabel, nextLabel;
+
+      if (!st.lastDate){
+        pct = 100;
+        badgeClass = 'red';
+        badgeLabel = 'Никогда не сдавала';
+        lastLabel = '—';
+        nextLabel = shortDate(st.nextDate);
+      } else {
+        var start = parseDate(st.lastDate);
+        var end = parseDate(st.nextDate);
+        var totalDays = Math.max(1, dayDiff(start, end));
+        var elapsed = clamp(dayDiff(start, now), 0, totalDays);
+        pct = (elapsed / totalDays) * 100;
+        var daysLeft = dayDiff(now, end);
+        var status = analysStatusColor(daysLeft);
+        if (showNever && status === 'green') status = 'yellow';
+        badgeClass = status;
+        if (showNever){
+          if (daysLeft < 0) badgeLabel = 'Просрочено · есть несданные';
+          else badgeLabel = 'Осталось ' + daysLeft + ' ' + plural(daysLeft, ['день','дня','дней']) + ' · есть несданные';
+        } else {
+          badgeLabel = analysStatusLabel(daysLeft);
+        }
+        lastLabel = shortDate(st.lastDate);
+        nextLabel = shortDate(st.nextDate);
+      }
+
+      var item = document.createElement('div');
+      item.className = 'analys-item';
+
+      var tagsHtml = cat.tags.map(function(t){
+        var name = typeof t === 'string' ? t : t.name;
+        var isNeverTag = typeof t === 'object' && t.never;
+        var cls = (isNeverTag && showNever) ? 'analys-tag never' : 'analys-tag';
+        return '<span class="' + cls + '">' + escapeHtml(name) + '</span>';
+      }).join('');
+
+      var warnHtml = showNever
+        ? '<div class="analys-warn">⚠ Часть анализов не сдавалась ни разу — сдать до приёма 26.12.2026</div>'
+        : '';
+
+      var doneLabel = userMarked ? 'Сдано' : 'Отметить как сданные';
+      var doneCls = userMarked ? 'analys-done-btn done' : 'analys-done-btn';
+      var widthPct = Math.max(pct, 3);
+
+      item.innerHTML =
+        '<div class="analys-item-head">' +
+          '<div class="analys-item-title"><span>' + cat.emoji + '</span>' + escapeHtml(cat.title) + '</div>' +
+          '<span class="analys-item-badge ' + badgeClass + '">' + escapeHtml(badgeLabel) + '</span>' +
+        '</div>' +
+        '<div class="analys-dates">' +
+          '<span>Последняя сдача: <b>' + lastLabel + '</b></span>' +
+          '<span>Следующая: <b>' + nextLabel + '</b></span>' +
+        '</div>' +
+        '<div class="bar"><div class="bar-fill" style="width:' + widthPct.toFixed(1) + '%"></div></div>' +
+        '<div class="analys-list">' + tagsHtml + '</div>' +
+        warnHtml +
+        '<div class="analys-foot">' +
+          '<button type="button" class="' + doneCls + '" data-cat="' + cat.id + '"' + (userMarked ? ' disabled' : '') + '>' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.8l5 5L19.5 6.6"/></svg>' +
+            escapeHtml(doneLabel) +
+          '</button>' +
+        '</div>';
+      root.appendChild(item);
+    });
+  }
+
+  document.getElementById('analysRoot').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.analys-done-btn') : null;
+    if (!btn) return;
+    if (btn.classList.contains('done')) return;
+    var catId = btn.dataset.cat;
+    var interval = ANALYS_INTERVAL[catId];
+    if (!interval) return;
+
+    var t = today();
+    var next = new Date(t);
+    next.setDate(next.getDate() + interval);
+
+    analysState[catId].lastDate = fmtDate(t);
+    analysState[catId].nextDate = fmtDate(next);
+    analysState[catId].neverCleared = true;
+    analysState[catId].userMarked = true;
+    store.set('analysState', analysState);
+
+    fireConfetti();
+    updateAnalysBadge();
+    renderAnalys();
+  });
+
+  function updateAnalysBadge(){
+    var el = document.getElementById('analysSince');
+    if (!el) return;
+    var dates = [];
+    ANALYS_CATEGORIES.forEach(function(cat){
+      var st = analysState[cat.id];
+      if (st.lastDate) dates.push(st.lastDate);
+    });
+    if (!dates.length){ el.textContent = 'ещё не сдавала'; return; }
+    dates.sort();
+    el.textContent = 'последняя сдача ' + shortDate(dates[dates.length - 1]);
+  }
+
+  var prepModal = document.getElementById('prepModal');
+  var prepBtn = document.getElementById('prepBtn');
+  var prepClose = document.getElementById('prepClose');
+  var prepBody = document.getElementById('prepBody');
+
+  function renderPrep(){
+    var html = '';
+    PREP_SECTIONS.forEach(function(sec){
+      var secCls = sec.urgent ? 'prep-section urgent' : 'prep-section';
+      html += '<div class="' + secCls + '">' +
+        '<div class="prep-section-title">' + escapeHtml(sec.title) + '</div>' +
+        '<ul class="prep-list">';
+      sec.items.forEach(function(it){ html += '<li>' + escapeHtml(it) + '</li>'; });
+      html += '</ul></div>';
+    });
+    prepBody.innerHTML = html;
+  }
+
+  prepBtn.addEventListener('click', function(){
+    prepModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  prepClose.addEventListener('click', function(){
+    prepModal.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+  prepModal.addEventListener('mousedown', function(e){
+    if (e.target === prepModal){
+      prepModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  /* ===== 5. MEASUREMENTS ===== */
+  var MEASURE_GROUPS = [
+    { title:'Основное', items:[
+      { key:'measDate', label:'Дата замера', unit:'',    def:'16 авг, 26г' },
+      { key:'height',   label:'Рост',        unit:'см',  def:'169' },
+      { key:'age',      label:'Возраст',     unit:'лет', def:'20' }
+    ]},
+    { title:'Обхваты', items:[
+      { key:'neck',       label:'Шея',        unit:'см', def:'34' },
+      { key:'chest',      label:'Грудь',      unit:'см', def:'85' },
+      { key:'underchest', label:'Под грудью', unit:'см', def:'78' },
+      { key:'waist',      label:'Талия',      unit:'см', def:'69' },
+      { key:'hips',       label:'Бёдра',      unit:'см', def:'87' },
+      { key:'wrist',      label:'Запястье',   unit:'см', def:'17' },
+      { key:'ankle',      label:'Щиколотка',  unit:'см', def:'22' }
+    ]},
+    { title:'Замеры', items:[
+      { key:'shoulders', label:'Плечи (визуально с руками)', unit:'см', def:'38-40' }
+    ]}
+  ];
+  function renderMeasurements(){
+    var root = document.getElementById('measRoot');
+    root.innerHTML = '';
+    MEASURE_GROUPS.forEach(function(group){
+      var g = document.createElement('div');
+      g.className = 'meas-group';
+      var t = document.createElement('div');
+      t.className = 'meas-group-title';
+      t.textContent = group.title;
+      g.appendChild(t);
+      var grid = document.createElement('div');
+      grid.className = 'meas-grid';
+      group.items.forEach(function(item){
+        var val = store.get('m_' + item.key, item.def);
+        var label = document.createElement('label');
+        label.className = 'field';
+        label.innerHTML =
+          '<span class="field-lbl">' + escapeHtml(item.label) + '</span>' +
+          '<span class="field-box">' +
+            '<input type="text" data-key="' + item.key + '" value="' + escapeHtml(val) + '" inputmode="decimal" autocomplete="off" spellcheck="false">' +
+            (item.unit ? '<span class="field-unit">' + escapeHtml(item.unit) + '</span>' : '') +
+          '</span>';
+        grid.appendChild(label);
+      });
+      g.appendChild(grid);
+      root.appendChild(g);
+    });
+    root.querySelectorAll('input[data-key]').forEach(function(inp){
+      inp.addEventListener('input', function(){
+        store.set('m_' + inp.dataset.key, inp.value);
+        if (inp.dataset.key === 'height') renderWeight();
+      });
+    });
+  }
+  var measToggle = document.getElementById('measToggle');
+  var measContent = document.getElementById('measContent');
+  var measToggleLabel = document.getElementById('measToggleLabel');
+  var MEAS_DATE_STR = '16 августа 2026';
+  measToggle.addEventListener('click', function(){
+    var open = measContent.classList.toggle('open');
+    measToggle.classList.toggle('open', open);
+    measToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    measToggleLabel.textContent = open ? 'Скрыть' : 'Показать · ' + MEAS_DATE_STR;
+  });
+
+  /* ===== 6. STATS TOGGLE ===== */
+  var statsToggle = document.getElementById('statsToggle');
+  var statsContent = document.getElementById('statsContent');
+  var statsToggleLabel = document.getElementById('statsToggleLabel');
+  statsToggle.addEventListener('click', function(){
+    var open = statsContent.classList.toggle('open');
+    statsToggle.classList.toggle('open', open);
+    statsToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    statsToggleLabel.textContent = open ? 'Скрыть' : 'Показать';
+  });
+
+  /* ===== 7. PIGGY ===== */
+  var goal = Math.max(1, Math.round(Number(store.get('goal', 1100000)) || 1100000));
+  var saved = Math.max(0, Number(store.get('saved', 0)) || 0);
+  var history = store.get('history', []);
+  if (!Array.isArray(history)) history = [];
+
+  var pigFill = document.getElementById('pigFill');
+  var pigFirstRender = true;
+
+  function renderPiggy(){
+    var pct = clamp(saved / goal * 100, 0, 100);
+    pigFill.style.transition = pigFirstRender ? 'none' : '';
+    pigFill.style.transform = 'translateY(' + (170 * (1 - pct / 100)).toFixed(2) + 'px)';
+    if (pigFirstRender){ requestAnimationFrame(function(){ pigFill.style.transition = ''; pigFirstRender = false; }); }
+    document.getElementById('savedAmount').textContent = fmtNum(saved) + ' ₽';
+    document.getElementById('savedGoal').textContent = 'из ' + fmtNum(goal) + ' ₽';
+    document.getElementById('savePct').textContent = pct.toFixed(pct < 10 ? 1 : 0) + '%';
+    document.getElementById('saveFill').style.width = pct + '%';
+    var goalBadge = document.getElementById('goalBadge');
+    if (goalBadge) goalBadge.textContent = 'Цель ' + fmtNum(goal) + ' ₽';
+    var left = Math.max(0, goal - saved);
+    document.getElementById('saveLeft').textContent = left > 0 ? 'осталось ' + fmtNum(left) + ' ₽' : 'цель достигнута';
+    document.getElementById('goalDone').classList.toggle('show', saved >= goal);
+  }
+
+  function pushHistory(type, amount){
+    if (!amount || amount <= 0) return;
+    history.unshift({ date: fmtDate(today()), amount: Math.round(amount), type: type });
+    if (history.length > 300) history = history.slice(0, 300);
+    store.set('history', history);
+    renderHistory();
+  }
+  function renderHistory(){
+    var list = document.getElementById('historyList');
+    if (!list) return;
+    if (!history.length){ list.innerHTML = '<div class="history-empty">Пока нет операций</div>'; return; }
+    var html = '';
+    history.forEach(function(h){
+      var sign = h.type === 'add' ? '+' : '−';
+      var cls = h.type === 'add' ? 'add' : 'sub';
+      var d = parseDate(h.date);
+      var dateStr = d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
+      html += '<div class="history-item ' + cls + '"><span class="history-date">' + dateStr + '</span><span class="history-amount">' + sign + ' ' + fmtNum(h.amount) + ' ₽</span></div>';
+    });
+    list.innerHTML = html;
+  }
+  function addMoney(amount){
+    if (!isFinite(amount) || amount <= 0) return;
+    saved = Math.max(0, saved + amount);
+    store.set('saved', saved); pushHistory('add', amount); renderPiggy();
+  }
+  function subMoney(amount){
+    if (!isFinite(amount) || amount <= 0) return;
+    var actual = Math.min(saved, amount);
+    if (actual <= 0) return;
+    saved = saved - actual;
+    store.set('saved', saved); pushHistory('sub', actual); renderPiggy();
+  }
+  document.getElementById('addBtn').addEventListener('click', function(){
+    var inp = document.getElementById('moneyInput');
+    var v = parseFloat(String(inp.value).replace(',', '.'));
+    if (isFinite(v) && v > 0){ addMoney(v); inp.value = ''; }
+  });
+  document.getElementById('subBtn').addEventListener('click', function(){
+    var inp = document.getElementById('moneyInput');
+    var v = parseFloat(String(inp.value).replace(',', '.'));
+    if (isFinite(v) && v > 0){ subMoney(v); inp.value = ''; }
+  });
+  document.getElementById('moneyInput').addEventListener('keydown', function(e){
+    if (e.key === 'Enter'){ e.preventDefault(); document.getElementById('addBtn').click(); }
+  });
+  document.querySelectorAll('.chip[data-add]').forEach(function(chip){
+    chip.addEventListener('click', function(){ addMoney(parseFloat(chip.dataset.add)); });
+  });
+  var historyToggle = document.getElementById('historyToggle');
+  var historyPanel = document.getElementById('historyPanel');
+  historyToggle.addEventListener('click', function(){
+    var open = historyPanel.classList.toggle('open');
+    historyToggle.classList.toggle('open', open);
+    historyToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  /* ===== GOAL MODAL ===== */
+  var goalModal = document.getElementById('goalModal');
+  var goalModalBox = document.getElementById('goalModalBox');
+  var goalInput = document.getElementById('goalInput');
+  var goalBadge = document.getElementById('goalBadge');
+
+  function openGoalModal(){
+    goalInput.value = goal;
+    goalModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ try{ goalInput.focus(); goalInput.select(); }catch(e){} }, 220);
+  }
+  function closeGoalModal(){
+    goalModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  goalBadge.addEventListener('click', openGoalModal);
+  document.getElementById('goalCancel').addEventListener('click', closeGoalModal);
+  document.getElementById('goalOk').addEventListener('click', function(){
+    var raw = String(goalInput.value).replace(/\s/g, '').replace(',', '.');
+    var v = parseFloat(raw);
+    if (!isFinite(v) || v < 1){
+      goalModalBox.classList.remove('shake');
+      void goalModalBox.offsetWidth;
+      goalModalBox.classList.add('shake');
+      return;
+    }
+    goal = Math.round(v);
+    store.set('goal', goal);
+    renderPiggy();
+    closeGoalModal();
+  });
+  goalInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter'){ e.preventDefault(); document.getElementById('goalOk').click(); }
+  });
+
+  /* ===== 8. TODOS ===== */
+  var todos = store.get('todos', []);
+  if (!Array.isArray(todos)) todos = [];
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  todos = todos.filter(function(t){ return t && typeof t.text === 'string' && t.text.trim(); });
+  todos.forEach(function(t){
+    if (!t.id) t.id = uid();
+    if (!t.created) t.created = Date.now();
+    if (t.done && !t.doneAt) t.doneAt = t.created;
+    if (!t.done) t.doneAt = 0;
+  });
+  var todoCard = document.getElementById('todoCard');
+  var todoInput = document.getElementById('todoInput');
+  var todoAddBtn = document.getElementById('todoAddBtn');
+  var activeList = document.getElementById('todoActiveList');
+  var doneList = document.getElementById('todoDoneList');
+  var activeEmpty = document.getElementById('todoActiveEmpty');
+  var doneEmpty = document.getElementById('todoDoneEmpty');
+  var todoBadge = document.getElementById('todoBadge');
+  var todoFill = document.getElementById('todoFill');
+  var todoDoneLabel = document.getElementById('todoDoneLabel');
+  var todoDoneToggle = document.getElementById('todoDoneToggle');
+  var todoDoneContent = document.getElementById('todoDoneContent');
+  var todoClearBtn = document.getElementById('todoClear');
+
+  function saveTodos(){ store.set('todos', todos); }
+  function findTodo(id){
+    for (var i = 0; i < todos.length; i++) if (todos[i].id === id) return todos[i];
+    return null;
+  }
+  function sortedActive(){ return todos.filter(function(t){ return !t.done; }).sort(function(a,b){ return (a.created||0)-(b.created||0); }); }
+  function sortedDone(){ return todos.filter(function(t){ return t.done; }).sort(function(a,b){ return (b.doneAt||0)-(a.doneAt||0); }); }
+
+  function buildTodoEl(t){
+    var el = document.createElement('div');
+    el.className = 'todo-item' + (t.done ? ' done' : '');
+    el.dataset.id = t.id;
+    var check = document.createElement('button');
+    check.type = 'button';
+    check.className = 'todo-check';
+    check.setAttribute('aria-label', t.done ? 'Вернуть в активные' : 'Отметить выполненной');
+    check.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4.5 12.8l5 5L19.5 6.6"/></svg>';
+    var text = document.createElement('span');
+    text.className = 'todo-text';
+    text.textContent = t.text;
+    var del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'todo-del';
+    del.setAttribute('aria-label', 'Удалить задачу');
+    del.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    el.appendChild(check); el.appendChild(text); el.appendChild(del);
+    return el;
+  }
+  function updateTodoMeta(){
+    var act = 0, dn = 0;
+    todos.forEach(function(t){ t.done ? dn++ : act++; });
+    activeEmpty.classList.toggle('hide', act > 0);
+    doneEmpty.classList.toggle('hide', dn > 0);
+    if (todos.length === 0) todoBadge.textContent = 'Пусто';
+    else if (act === 0) todoBadge.textContent = 'Всё выполнено ✿';
+    else todoBadge.textContent = 'Осталось: ' + act;
+    todoDoneLabel.textContent = 'Выполненные · ' + dn;
+    todoClearBtn.style.display = dn ? '' : 'none';
+    var pct = todos.length ? (dn / todos.length) * 100 : 0;
+    todoFill.style.width = pct.toFixed(1) + '%';
+  }
+  function renderTodos(){
+    activeList.innerHTML = '';
+    sortedActive().forEach(function(t){ activeList.appendChild(buildTodoEl(t)); });
+    doneList.innerHTML = '';
+    sortedDone().forEach(function(t){ doneList.appendChild(buildTodoEl(t)); });
+    updateTodoMeta();
+  }
+  function addTodo(raw){
+    var text = String(raw || '').trim().replace(/\s+/g, ' ');
+    if (!text) return;
+    if (text.length > 200) text = text.slice(0, 200);
+    var t = { id: uid(), text: text, done: false, created: Date.now(), doneAt: 0 };
+    todos.push(t); saveTodos();
+    var el = buildTodoEl(t); el.classList.add('arriving');
+    activeList.appendChild(el);
+    setTimeout(function(){ el.classList.remove('arriving'); }, 460);
+    updateTodoMeta();
+    try{ el.scrollIntoView({ behavior:'smooth', block:'nearest' }); }catch(e){}
+  }
+  function toggleTodo(id){
+    var t = findTodo(id); if (!t) return;
+    t.done = !t.done; t.doneAt = t.done ? Date.now() : 0;
+    saveTodos();
+    renderTodos();
+  }
+  function removeTodo(id){
+    todos = todos.filter(function(t){ return t.id !== id; });
+    saveTodos();
+    renderTodos();
+  }
+  function clearDone(){
+    if (!confirm('Очистить все выполненные задачи?')) return;
+    todos = todos.filter(function(t){ return !t.done; });
+    saveTodos();
+    renderTodos();
+  }
+  todoCard.addEventListener('click', function(e){
+    var item = e.target.closest ? e.target.closest('.todo-item') : null;
+    if (!item) return;
+    if (e.target.closest('.todo-check')){ toggleTodo(item.dataset.id); return; }
+    if (e.target.closest('.todo-del')){ removeTodo(item.dataset.id); }
+  });
+  todoAddBtn.addEventListener('click', function(){
+    addTodo(todoInput.value);
+    todoInput.value = '';
+    todoInput.focus();
+  });
+  todoInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter'){ e.preventDefault(); todoAddBtn.click(); }
+  });
+  todoDoneToggle.addEventListener('click', function(){
+    var open = todoDoneContent.classList.toggle('open');
+    todoDoneToggle.classList.toggle('open', open);
+    todoDoneToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  todoClearBtn.addEventListener('click', clearDone);
+
+  /* ===== 9. RESET ===== */
+  var pinModal = document.getElementById('pinModal');
+  var confirmModal = document.getElementById('confirmModal');
+  var pinInput = document.getElementById('pinInput');
+  var pinErr = document.getElementById('pinErr');
+  var pinBox = document.getElementById('pinModalBox');
+  function openModal(el){ el.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeModal(el){ el.classList.remove('open'); document.body.style.overflow = ''; }
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    pinInput.value = ''; pinErr.classList.remove('show'); openModal(pinModal);
+    setTimeout(function(){ pinInput.focus(); }, 220);
+  });
+  document.getElementById('pinCancel').addEventListener('click', function(){ closeModal(pinModal); });
+  function checkPin(){
+    if (pinInput.value === PIN_CODE){
+      closeModal(pinModal);
+      setTimeout(function(){ openModal(confirmModal); }, 220);
+    } else {
+      pinErr.classList.add('show');
+      pinBox.classList.remove('shake'); void pinBox.offsetWidth; pinBox.classList.add('shake');
+      pinInput.value = ''; pinInput.focus();
+    }
+  }
+  document.getElementById('pinOk').addEventListener('click', checkPin);
+  pinInput.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); checkPin(); } });
+  pinInput.addEventListener('input', function(){ pinErr.classList.remove('show'); });
+  document.getElementById('confCancel').addEventListener('click', function(){ closeModal(confirmModal); });
+  document.getElementById('confOk').addEventListener('click', async function(){
+    store.clearAll();
+    if (currentUser) {
+      try {
+        const docRef = doc(db, 'users', currentUser.uid, 'data', 'main');
+        await setDoc(docRef, {}, { merge: false });
+      } catch(e){ console.error(e); }
+    }
+    setTimeout(function(){ location.reload(); }, 300);
+  });
+
+  document.querySelectorAll('.overlay').forEach(function(ov){
+    ov.addEventListener('mousedown', function(e){
+      if (e.target === ov){
+        if (ov.id === 'refillModal') closeRefillModal();
+        else if (ov.id === 'editStockModal') closeEditStockModal();
+        else if (ov.id === 'goalModal') closeGoalModal();
+        else if (ov.id === 'epilModal') closeEpilModal();
+        else if (ov.id === 'epilZoneModal'){ epilZoneModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else if (ov.id === 'priceModal'){ priceModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else if (ov.id === 'addMedModal'){ addMedModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else if (ov.id === 'prepModal'){ prepModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else closeModal(ov);
+      }
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){
+      document.querySelectorAll('.overlay.open').forEach(function(ov){
+        if (ov.id === 'refillModal') closeRefillModal();
+        else if (ov.id === 'editStockModal') closeEditStockModal();
+        else if (ov.id === 'goalModal') closeGoalModal();
+        else if (ov.id === 'epilModal') closeEpilModal();
+        else if (ov.id === 'epilZoneModal'){ epilZoneModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else if (ov.id === 'priceModal'){ priceModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else if (ov.id === 'addMedModal'){ addMedModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else if (ov.id === 'prepModal'){ prepModal.classList.remove('open'); document.body.style.overflow = ''; }
+        else closeModal(ov);
+      });
+    }
+  });
+
+  /* ===== INIT ===== */
+  runAutoDeduction();
+  renderHRT();
+  renderWeight();
+  renderMeds();
+  renderStats();
+  renderEpil();
+  renderEpilZones();
+  renderExpenses();
+  renderAnalys();
+  updateAnalysBadge();
+  renderPrep();
+  renderMeasurements();
+  renderPiggy();
+  renderHistory();
+  renderTodos();
+
+  setInterval(function(){
+    renderHRT();
+    renderEpil();
+    renderAnalys();
+    runAutoDeduction();
+  }, 60000);
+
+  /* ===== REFRESH ===== */
+  return function refreshAll(){
+    weight = Number(store.get('weight', 53.88));
+    if (!isFinite(weight) || weight <= 0) weight = 53.88;
+    weightInput.value = formatWeight(weight);
+
+    meds = store.get('meds', {});
+    if (!meds || typeof meds !== 'object') meds = {};
+    stats = store.get('stats', {});
+    if (!stats || typeof stats !== 'object') stats = {};
+    prices = store.get('prices', {});
+    if (!prices || typeof prices !== 'object') prices = {};
+    customMeds = store.get('customMeds', []);
+    if (!Array.isArray(customMeds)) customMeds = [];
+    ensureMedsInitialized();
+
+    epilLast = store.get('epil_last', null);
+    if (!epilLast){ epilLast = fmtDate(today()); store.set('epil_last', epilLast); }
+    epilInterval = Math.max(1, Math.round(Number(store.get('epil_interval', EPIL_DEFAULT_INTERVAL)) || EPIL_DEFAULT_INTERVAL));
+    epilZones = store.get('epilZones', []);
+    if (!Array.isArray(epilZones)) epilZones = [];
+
+    analysState = store.get('analysState', null);
+    if (!analysState || typeof analysState !== 'object'){
+      analysState = JSON.parse(JSON.stringify(DEFAULT_ANALYS_STATE));
+      store.set('analysState', analysState);
+    }
+
+    goal = Math.max(1, Math.round(Number(store.get('goal', 1100000)) || 1100000));
+    saved = Math.max(0, Number(store.get('saved', 0)) || 0);
+    history = store.get('history', []);
+    if (!Array.isArray(history)) history = [];
+
+    todos = store.get('todos', []);
+    if (!Array.isArray(todos)) todos = [];
+    todos = todos.filter(function(t){ return t && typeof t.text === 'string' && t.text.trim(); });
+    todos.forEach(function(t){
+      if (!t.id) t.id = uid();
+      if (!t.created) t.created = Date.now();
+      if (t.done && !t.doneAt) t.doneAt = t.created;
+      if (!t.done) t.doneAt = 0;
+    });
+
+    renderHRT();
+    renderWeight();
+    renderMeds();
+    renderStats();
+    renderEpil();
+    renderEpilZones();
+    renderExpenses();
+    renderAnalys();
+    updateAnalysBadge();
+    renderMeasurements();
+    renderPiggy();
+    renderHistory();
+    renderTodos();
+  };
+}
+</script>
+</body>
+</html>
